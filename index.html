@@ -130,6 +130,18 @@
       align-items: stretch;
     }
 
+    body.experiment-mode main {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    body.experiment-mode .sidebar {
+      display: none;
+    }
+
+    body.experiment-mode .workbench {
+      min-height: calc(100vh - 132px);
+    }
+
     .sidebar,
     .workbench {
       background: rgba(255, 255, 255, .88);
@@ -910,6 +922,7 @@
       [els.introScreen, els.countdownScreen, els.trialScreen, els.betweenScreen, els.resultScreen].forEach(node => {
         node.classList.toggle("active", node === screen);
       });
+      document.body.classList.toggle("experiment-mode", screen !== els.introScreen);
     }
 
     function shuffle(items) {
