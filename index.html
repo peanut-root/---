@@ -40,7 +40,8 @@
     }
 
     button,
-    input {
+    input,
+    select {
       font: inherit;
     }
 
@@ -280,13 +281,16 @@
 
     .setup-panel {
       display: grid;
-      grid-template-columns: 1fr 150px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
-      align-items: end;
       padding: 16px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: #fbfcf8;
+    }
+
+    .setup-panel .full {
+      grid-column: 1 / -1;
     }
 
     label {
@@ -296,7 +300,8 @@
       font-size: 13px;
     }
 
-    input {
+    input,
+    select {
       width: 100%;
       border: 1px solid #cbd3ca;
       border-radius: 7px;
@@ -306,9 +311,27 @@
       outline: none;
     }
 
-    input:focus {
+    input:focus,
+    select:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 4px rgba(23, 107, 135, .12);
+    }
+
+    .consent-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 13px;
+    }
+
+    .consent-row input {
+      width: 18px;
+      min-width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      accent-color: var(--accent);
     }
 
     .stimulus-wrap {
@@ -358,6 +381,21 @@
 
     .feedback.bad {
       color: var(--bad);
+    }
+
+    .countdown {
+      width: 112px;
+      height: 112px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      margin: 0 auto;
+      font-size: 48px;
+      font-weight: 900;
+      color: var(--accent-dark);
+      background: #edf3f4;
+      border: 1px solid rgba(23, 107, 135, .2);
+      box-shadow: 0 10px 24px rgba(23, 107, 135, .12);
     }
 
     .controls {
@@ -453,7 +491,7 @@
 
     .results-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 12px;
     }
 
@@ -509,6 +547,21 @@
       border-bottom: 0;
     }
 
+    .data-panel {
+      display: grid;
+      gap: 10px;
+    }
+
+    .data-panel h3 {
+      font-size: 17px;
+    }
+
+    .data-note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
     .footer-note {
       color: var(--muted);
       font-size: 13px;
@@ -545,8 +598,11 @@
         min-height: 620px;
       }
 
-      .setup-panel,
       .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .setup-panel {
         grid-template-columns: 1fr;
       }
 
@@ -658,8 +714,42 @@
                 被试编号
                 <input id="participantId" type="text" autocomplete="off" placeholder="例如 P001">
               </label>
-              <button id="startPracticeBtn">开始练习</button>
+              <label>
+                年龄
+                <input id="participantAge" type="number" min="6" max="99" inputmode="numeric" placeholder="可选">
+              </label>
+              <label>
+                实验版本
+                <select id="trialCount">
+                  <option value="32">标准版：32 个正式试次</option>
+                  <option value="48">增强版：48 个正式试次</option>
+                  <option value="64">完整版：64 个正式试次</option>
+                </select>
+              </label>
+              <label>
+                单题最长反应时间
+                <select id="timeoutMs">
+                  <option value="2500">2500 ms</option>
+                  <option value="2000">2000 ms</option>
+                  <option value="3000">3000 ms</option>
+                </select>
+              </label>
+              <label class="consent-row full">
+                <input id="consent" type="checkbox">
+                <span>我了解本实验会在本机浏览器中记录按键、正确性和反应时；数据可在结束后下载，不会自动上传。</span>
+              </label>
+              <button class="full" id="startPracticeBtn">开始练习</button>
             </div>
+          </div>
+        </section>
+
+        <section class="screen" id="countdownScreen">
+          <div class="intro-layout">
+            <div class="hero-copy">
+              <h2 id="countdownTitle">准备开始</h2>
+              <p id="countdownText">请把手指放在 D / F / J / K 上，只判断字体颜色。</p>
+            </div>
+            <div class="countdown" id="countdownNumber">3</div>
           </div>
         </section>
 
@@ -696,6 +786,7 @@
             </div>
             <div class="results-grid">
               <div class="result-card"><span>总体正确率</span><strong id="overallAccuracy">--</strong></div>
+              <div class="result-card"><span>漏答次数</span><strong id="missedCount">--</strong></div>
               <div class="result-card"><span>一致条件平均反应时</span><strong id="congruentRt">--</strong></div>
               <div class="result-card"><span>不一致条件平均反应时</span><strong id="incongruentRt">--</strong></div>
               <div class="result-card"><span>Stroop 干扰量</span><strong id="stroopEffect">--</strong></div>
@@ -713,6 +804,28 @@
                 </thead>
                 <tbody id="resultRows"></tbody>
               </table>
+            </div>
+            <div class="data-panel">
+              <div>
+                <h3>逐试次交互记录</h3>
+                <p class="data-note">下表显示正式实验的最近 12 条记录；完整数据已保存在本次页面状态中，可下载 CSV。</p>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>序号</th>
+                      <th>条件</th>
+                      <th>词义</th>
+                      <th>字体颜色</th>
+                      <th>反应键</th>
+                      <th>是否正确</th>
+                      <th>RT</th>
+                    </tr>
+                  </thead>
+                  <tbody id="trialLogRows"></tbody>
+                </table>
+              </div>
             </div>
           </div>
         </section>
@@ -736,8 +849,14 @@
       { name: "黄", css: "var(--yellow)", key: "k", code: "yellow" }
     ];
 
+    const STORAGE_KEY = "stroop-experiment-last-session";
+
     const state = {
+      sessionId: "",
       participantId: "",
+      age: "",
+      formalTrialCount: 32,
+      timeoutMs: 2500,
       phase: "intro",
       trials: [],
       currentIndex: -1,
@@ -754,12 +873,20 @@
       accuracyBadge: document.querySelector("#accuracyBadge"),
       meterFill: document.querySelector("#meterFill"),
       introScreen: document.querySelector("#introScreen"),
+      countdownScreen: document.querySelector("#countdownScreen"),
       trialScreen: document.querySelector("#trialScreen"),
       betweenScreen: document.querySelector("#betweenScreen"),
       resultScreen: document.querySelector("#resultScreen"),
       participantId: document.querySelector("#participantId"),
+      participantAge: document.querySelector("#participantAge"),
+      trialCount: document.querySelector("#trialCount"),
+      timeoutMs: document.querySelector("#timeoutMs"),
+      consent: document.querySelector("#consent"),
       startPracticeBtn: document.querySelector("#startPracticeBtn"),
       startMainBtn: document.querySelector("#startMainBtn"),
+      countdownTitle: document.querySelector("#countdownTitle"),
+      countdownText: document.querySelector("#countdownText"),
+      countdownNumber: document.querySelector("#countdownNumber"),
       fixation: document.querySelector("#fixation"),
       stimulus: document.querySelector("#stimulus"),
       trialNote: document.querySelector("#trialNote"),
@@ -770,15 +897,17 @@
       downloadBtn: document.querySelector("#downloadBtn"),
       restartBtn: document.querySelector("#restartBtn"),
       overallAccuracy: document.querySelector("#overallAccuracy"),
+      missedCount: document.querySelector("#missedCount"),
       congruentRt: document.querySelector("#congruentRt"),
       incongruentRt: document.querySelector("#incongruentRt"),
       stroopEffect: document.querySelector("#stroopEffect"),
       resultInterpretation: document.querySelector("#resultInterpretation"),
-      resultRows: document.querySelector("#resultRows")
+      resultRows: document.querySelector("#resultRows"),
+      trialLogRows: document.querySelector("#trialLogRows")
     };
 
     function showScreen(screen) {
-      [els.introScreen, els.trialScreen, els.betweenScreen, els.resultScreen].forEach(node => {
+      [els.introScreen, els.countdownScreen, els.trialScreen, els.betweenScreen, els.resultScreen].forEach(node => {
         node.classList.toggle("active", node === screen);
       });
     }
@@ -794,7 +923,7 @@
 
     function makeTrials(phase) {
       const blocks = [];
-      const repeats = phase === "practice" ? 1 : 4;
+      const repeats = phase === "practice" ? 1 : Math.max(1, Math.round(state.formalTrialCount / 8));
 
       for (let repeat = 0; repeat < repeats; repeat += 1) {
         COLORS.forEach(word => {
@@ -832,6 +961,43 @@
       const timer = setTimeout(fn, delay);
       state.timers.push(timer);
       return timer;
+    }
+
+    function persistSession() {
+      const payload = {
+        sessionId: state.sessionId,
+        participantId: state.participantId,
+        age: state.age,
+        formalTrialCount: state.formalTrialCount,
+        timeoutMs: state.timeoutMs,
+        savedAt: new Date().toISOString(),
+        responses: state.responses
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    }
+
+    function startCountdown(phase) {
+      clearTimers();
+      state.phase = phase;
+      els.stageLabel.textContent = phase === "practice" ? "练习准备" : "正式实验准备";
+      els.countdownTitle.textContent = phase === "practice" ? "练习即将开始" : "正式实验即将开始";
+      els.countdownText.textContent = phase === "practice"
+        ? "练习阶段会显示反馈，请熟悉按键。"
+        : "正式阶段不会逐题反馈，系统会记录每一次交互。";
+      showScreen(els.countdownScreen);
+      let count = 3;
+      els.countdownNumber.textContent = count;
+      const tick = () => {
+        count -= 1;
+        if (count <= 0) {
+          els.countdownNumber.textContent = "Go";
+          setTimer(() => startPhase(phase), 350);
+          return;
+        }
+        els.countdownNumber.textContent = count;
+        setTimer(tick, 700);
+      };
+      setTimer(tick, 700);
     }
 
     function updateProgress() {
@@ -895,6 +1061,34 @@
       els.trialNote.textContent = "判断字体颜色";
       state.stimulusShownAt = performance.now();
       state.accepting = true;
+      setTimer(handleMissedResponse, state.timeoutMs);
+    }
+
+    function buildRecord({ key, selected, correct, rt, missed }) {
+      const trial = state.currentTrial;
+      return {
+        sessionId: state.sessionId,
+        participantId: state.participantId,
+        age: state.age,
+        phase: state.phase,
+        trial: trial.index,
+        condition: trial.condition,
+        word: trial.word,
+        ink: trial.ink,
+        correctKey: trial.key.toUpperCase(),
+        responseKey: key ? key.toUpperCase() : "",
+        responseColor: selected ? selected.name : "",
+        correct,
+        missed,
+        rt,
+        timestamp: new Date().toISOString()
+      };
+    }
+
+    function saveResponse(record) {
+      state.responses.push(record);
+      persistSession();
+      updateProgress();
     }
 
     function handleResponse(key) {
@@ -908,22 +1102,8 @@
       const rt = Math.round(performance.now() - state.stimulusShownAt);
       const trial = state.currentTrial;
       const correct = normalized === trial.key;
-      const record = {
-        participantId: state.participantId,
-        phase: state.phase,
-        trial: trial.index,
-        condition: trial.condition,
-        word: trial.word,
-        ink: trial.ink,
-        correctKey: trial.key.toUpperCase(),
-        responseKey: normalized.toUpperCase(),
-        responseColor: selected.name,
-        correct,
-        rt
-      };
-
-      state.responses.push(record);
-      updateProgress();
+      const record = buildRecord({ key: normalized, selected, correct, rt, missed: false });
+      saveResponse(record);
 
       if (state.phase === "practice") {
         els.feedback.textContent = correct ? `正确，${rt} ms` : `错误，正确答案是 ${trial.ink}`;
@@ -934,6 +1114,30 @@
         els.stimulus.classList.add("hidden");
         els.trialNote.textContent = "已记录";
         setTimer(nextTrial, 320);
+      }
+    }
+
+    function handleMissedResponse() {
+      if (!state.accepting || !state.currentTrial) return;
+      state.accepting = false;
+      const record = buildRecord({
+        key: "",
+        selected: null,
+        correct: false,
+        rt: state.timeoutMs,
+        missed: true
+      });
+      saveResponse(record);
+      els.stimulus.classList.add("hidden");
+
+      if (state.phase === "practice") {
+        els.feedback.textContent = `超时，正确答案是 ${state.currentTrial.ink}`;
+        els.feedback.className = "feedback bad";
+        els.trialNote.textContent = "请在限定时间内反应";
+        setTimer(nextTrial, 950);
+      } else {
+        els.trialNote.textContent = "超时，已记录漏答";
+        setTimer(nextTrial, 360);
       }
     }
 
@@ -963,10 +1167,11 @@
 
     function summarize(condition) {
       const rows = state.responses.filter(response => response.phase === "main" && response.condition === condition);
-      const correctRows = rows.filter(response => response.correct);
+      const correctRows = rows.filter(response => response.correct && !response.missed);
       return {
         trials: rows.length,
         correct: correctRows.length,
+        missed: rows.filter(response => response.missed).length,
         accuracy: rows.length ? correctRows.length / rows.length : 0,
         rt: mean(correctRows.map(response => response.rt))
       };
@@ -975,12 +1180,14 @@
     function renderResults() {
       const mainRows = state.responses.filter(response => response.phase === "main");
       const correct = mainRows.filter(response => response.correct).length;
+      const missed = mainRows.filter(response => response.missed).length;
       const overallAccuracy = mainRows.length ? correct / mainRows.length : 0;
       const congruent = summarize("congruent");
       const incongruent = summarize("incongruent");
       const effect = congruent.rt !== null && incongruent.rt !== null ? incongruent.rt - congruent.rt : null;
 
       els.overallAccuracy.textContent = `${Math.round(overallAccuracy * 100)}%`;
+      els.missedCount.textContent = missed;
       els.congruentRt.textContent = congruent.rt === null ? "--" : `${Math.round(congruent.rt)} ms`;
       els.incongruentRt.textContent = incongruent.rt === null ? "--" : `${Math.round(incongruent.rt)} ms`;
       els.stroopEffect.textContent = effect === null ? "--" : `${Math.round(effect)} ms`;
@@ -1001,7 +1208,19 @@
           <td>${row.trials}</td>
           <td>${row.correct}</td>
           <td>${Math.round(row.accuracy * 100)}%</td>
-          <td>${row.rt === null ? "--" : `${Math.round(row.rt)} ms`}</td>
+          <td>${row.rt === null ? "--" : `${Math.round(row.rt)} ms`}（漏答 ${row.missed}）</td>
+        </tr>
+      `).join("");
+
+      els.trialLogRows.innerHTML = mainRows.slice(-12).map(row => `
+        <tr>
+          <td>${row.trial}</td>
+          <td>${row.condition === "congruent" ? "一致" : "不一致"}</td>
+          <td>${row.word}</td>
+          <td>${row.ink}</td>
+          <td>${row.missed ? "漏答" : row.responseKey}</td>
+          <td>${row.correct ? "正确" : "错误"}</td>
+          <td>${row.missed ? "超时" : `${row.rt} ms`}</td>
         </tr>
       `).join("");
 
@@ -1015,12 +1234,12 @@
 
     function downloadCsv() {
       const headers = [
-        "participant_id", "phase", "trial", "condition", "word", "ink",
-        "correct_key", "response_key", "response_color", "correct", "rt_ms"
+        "session_id", "participant_id", "age", "phase", "trial", "condition", "word", "ink",
+        "correct_key", "response_key", "response_color", "correct", "missed", "rt_ms", "timestamp"
       ];
       const lines = state.responses.map(row => [
-        row.participantId, row.phase, row.trial, row.condition, row.word, row.ink,
-        row.correctKey, row.responseKey, row.responseColor, row.correct ? 1 : 0, row.rt
+        row.sessionId, row.participantId, row.age, row.phase, row.trial, row.condition, row.word, row.ink,
+        row.correctKey, row.responseKey, row.responseColor, row.correct ? 1 : 0, row.missed ? 1 : 0, row.rt, row.timestamp
       ].map(value => `"${String(value).replaceAll('"', '""')}"`).join(","));
       const csv = [headers.join(","), ...lines].join("\n");
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
@@ -1036,7 +1255,11 @@
     function resetExperiment() {
       clearTimers();
       Object.assign(state, {
+        sessionId: "",
         participantId: "",
+        age: "",
+        formalTrialCount: Number(els.trialCount.value),
+        timeoutMs: Number(els.timeoutMs.value),
         phase: "intro",
         trials: [],
         currentIndex: -1,
@@ -1047,6 +1270,8 @@
         timers: []
       });
       els.participantId.value = "";
+      els.participantAge.value = "";
+      els.consent.checked = false;
       els.downloadBtn.disabled = true;
       els.stageLabel.textContent = "准备开始";
       els.trialCounter.textContent = "尚未开始";
@@ -1058,12 +1283,20 @@
     }
 
     els.startPracticeBtn.addEventListener("click", () => {
+      if (!els.consent.checked) {
+        els.footerNote.textContent = "请先勾选知情同意，实验数据只保存在本机浏览器。";
+        return;
+      }
+      state.sessionId = `S${Date.now()}`;
       state.participantId = els.participantId.value.trim() || `P${Date.now().toString().slice(-5)}`;
+      state.age = els.participantAge.value.trim();
+      state.formalTrialCount = Number(els.trialCount.value);
+      state.timeoutMs = Number(els.timeoutMs.value);
       els.participantId.value = state.participantId;
-      startPhase("practice");
+      startCountdown("practice");
     });
 
-    els.startMainBtn.addEventListener("click", () => startPhase("main"));
+    els.startMainBtn.addEventListener("click", () => startCountdown("main"));
     els.downloadBtn.addEventListener("click", downloadCsv);
     els.restartBtn.addEventListener("click", resetExperiment);
 
