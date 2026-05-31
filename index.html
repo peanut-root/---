@@ -1,0 +1,1084 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stroop Effect 实验</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7f2;
+      --panel: #ffffff;
+      --ink: #1f2430;
+      --muted: #667085;
+      --line: #d9ded6;
+      --accent: #176b87;
+      --accent-dark: #0f5369;
+      --good: #2f7d32;
+      --bad: #bd2f2f;
+      --gold: #a76b00;
+      --blue: #1d62d1;
+      --green: #218452;
+      --red: #cf2e2e;
+      --yellow: #d69b00;
+      --shadow: 0 18px 48px rgba(31, 36, 48, .13);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      background:
+        linear-gradient(135deg, rgba(23, 107, 135, .09), transparent 34%),
+        linear-gradient(225deg, rgba(167, 107, 0, .1), transparent 30%),
+        var(--bg);
+      color: var(--ink);
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .app-shell {
+      width: min(1120px, calc(100% - 32px));
+      min-height: 100vh;
+      margin: 0 auto;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 18px;
+      padding: 22px 0 18px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mark {
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(23, 107, 135, .25);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: #fff;
+      box-shadow: 0 8px 18px rgba(23, 107, 135, .12);
+    }
+
+    .mark span {
+      font-weight: 900;
+      font-size: 22px;
+      color: var(--accent);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(24px, 3vw, 38px);
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .stage-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .75);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .stage-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 5px rgba(23, 107, 135, .14);
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: 310px minmax(0, 1fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .sidebar,
+    .workbench {
+      background: rgba(255, 255, 255, .88);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .sidebar {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .info-block {
+      display: grid;
+      gap: 8px;
+    }
+
+    .info-block h2 {
+      font-size: 17px;
+    }
+
+    .info-block p,
+    .info-block li {
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    ol {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .key-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 9px;
+    }
+
+    .key-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcf8;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+    }
+
+    .key-card strong {
+      display: inline-grid;
+      place-items: center;
+      min-width: 28px;
+      height: 28px;
+      padding: 0 7px;
+      border-radius: 6px;
+      background: #edf3f4;
+      color: var(--accent-dark);
+      border: 1px solid rgba(23, 107, 135, .18);
+    }
+
+    .swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 1px rgba(31, 36, 48, .18);
+    }
+
+    .blue { background: var(--blue); }
+    .green { background: var(--green); }
+    .red { background: var(--red); }
+    .yellow { background: var(--yellow); }
+
+    .workbench {
+      min-height: 640px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      overflow: hidden;
+    }
+
+    .progress-top {
+      padding: 18px 20px 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .meter {
+      height: 9px;
+      border-radius: 999px;
+      background: #e7ece4;
+      overflow: hidden;
+    }
+
+    .meter-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #4d9a68);
+      transition: width .25s ease;
+    }
+
+    .screen {
+      padding: 24px;
+      display: none;
+      align-content: center;
+      gap: 18px;
+    }
+
+    .screen.active {
+      display: grid;
+    }
+
+    .intro-layout {
+      max-width: 700px;
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 12px;
+    }
+
+    .hero-copy h2 {
+      font-size: clamp(26px, 4vw, 46px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .hero-copy p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .setup-panel {
+      display: grid;
+      grid-template-columns: 1fr 150px;
+      gap: 12px;
+      align-items: end;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcf8;
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid #cbd3ca;
+      border-radius: 7px;
+      padding: 12px 13px;
+      background: #fff;
+      color: var(--ink);
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(23, 107, 135, .12);
+    }
+
+    .stimulus-wrap {
+      display: grid;
+      place-items: center;
+      min-height: 360px;
+      gap: 18px;
+      text-align: center;
+      user-select: none;
+    }
+
+    .fixation {
+      font-size: 74px;
+      font-weight: 700;
+      color: #333b49;
+      min-height: 95px;
+      display: grid;
+      place-items: center;
+    }
+
+    .stimulus {
+      min-height: 112px;
+      display: grid;
+      place-items: center;
+      font-size: clamp(58px, 11vw, 118px);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0;
+      text-shadow: 0 10px 26px rgba(31, 36, 48, .1);
+    }
+
+    .trial-note {
+      min-height: 28px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .feedback {
+      min-height: 34px;
+      font-weight: 800;
+      font-size: 20px;
+    }
+
+    .feedback.good {
+      color: var(--good);
+    }
+
+    .feedback.bad {
+      color: var(--bad);
+    }
+
+    .controls {
+      padding: 18px 20px;
+      border-top: 1px solid var(--line);
+      background: rgba(251, 252, 248, .8);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .button-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 0;
+      border-radius: 7px;
+      padding: 11px 15px;
+      color: #fff;
+      background: var(--accent);
+      cursor: pointer;
+      font-weight: 800;
+      transition: transform .14s ease, background .14s ease, box-shadow .14s ease;
+      box-shadow: 0 9px 18px rgba(23, 107, 135, .2);
+    }
+
+    button:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button.secondary {
+      background: #e8ede7;
+      color: var(--ink);
+      box-shadow: none;
+    }
+
+    button.secondary:hover {
+      background: #dfe7dd;
+    }
+
+    button.ghost {
+      background: transparent;
+      color: var(--accent-dark);
+      border: 1px solid rgba(23, 107, 135, .25);
+      box-shadow: none;
+    }
+
+    button:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .response-pad {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(88px, 1fr));
+      gap: 10px;
+      width: min(620px, 100%);
+      margin: 0 auto;
+    }
+
+    .response-pad button {
+      display: grid;
+      gap: 5px;
+      justify-items: center;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: 0 8px 16px rgba(31, 36, 48, .08);
+      min-height: 76px;
+    }
+
+    .response-pad kbd {
+      min-width: 30px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: #edf3f4;
+      border: 1px solid rgba(23, 107, 135, .18);
+      color: var(--accent-dark);
+      font-weight: 900;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .result-card {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcf8;
+      min-height: 112px;
+      display: grid;
+      align-content: space-between;
+      gap: 12px;
+    }
+
+    .result-card span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .result-card strong {
+      font-size: clamp(24px, 3vw, 34px);
+      letter-spacing: 0;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 620px;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 11px 12px;
+      border-bottom: 1px solid #edf0eb;
+    }
+
+    th {
+      color: var(--muted);
+      background: #fbfcf8;
+      font-weight: 800;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 900px) {
+      .app-shell {
+        width: min(100% - 22px, 720px);
+      }
+
+      header,
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        align-items: flex-start;
+      }
+
+      main {
+        display: grid;
+      }
+
+      .stage-pill {
+        white-space: normal;
+      }
+
+      .workbench {
+        min-height: 620px;
+      }
+
+      .setup-panel,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .response-pad {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 520px) {
+      .app-shell {
+        width: calc(100% - 18px);
+        padding-top: 12px;
+      }
+
+      .brand {
+        align-items: flex-start;
+      }
+
+      .mark {
+        width: 38px;
+        height: 38px;
+      }
+
+      .screen {
+        padding: 18px 14px;
+      }
+
+      .controls {
+        padding: 14px;
+      }
+
+      .stimulus-wrap {
+        min-height: 310px;
+      }
+
+      .stimulus {
+        font-size: clamp(50px, 18vw, 78px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header>
+      <div class="brand">
+        <div class="mark" aria-hidden="true"><span>S</span></div>
+        <div>
+          <h1>Stroop Effect 实验</h1>
+          <p class="subtitle">测量词义干扰下的颜色命名反应时</p>
+        </div>
+      </div>
+      <div class="stage-pill" aria-live="polite">
+        <span class="stage-dot"></span>
+        <span id="stageLabel">准备开始</span>
+      </div>
+    </header>
+
+    <main>
+      <aside class="sidebar">
+        <section class="info-block">
+          <h2>实验设计</h2>
+          <p>自变量为刺激类型：一致条件中词义和字体颜色相同，不一致条件中词义和字体颜色不同。因变量为正确反应时和正确率。</p>
+        </section>
+
+        <section class="info-block">
+          <h2>任务规则</h2>
+          <ol>
+            <li>忽略文字内容，只判断字体颜色。</li>
+            <li>尽量又快又准地按下对应键。</li>
+            <li>练习阶段会显示反馈，正式阶段不显示逐题反馈。</li>
+          </ol>
+        </section>
+
+        <section class="info-block">
+          <h2>按键映射</h2>
+          <div class="key-grid" aria-label="按键颜色映射">
+            <div class="key-card"><strong>D</strong><span>蓝</span><span class="swatch blue"></span></div>
+            <div class="key-card"><strong>F</strong><span>绿</span><span class="swatch green"></span></div>
+            <div class="key-card"><strong>J</strong><span>红</span><span class="swatch red"></span></div>
+            <div class="key-card"><strong>K</strong><span>黄</span><span class="swatch yellow"></span></div>
+          </div>
+        </section>
+
+        <section class="info-block">
+          <h2>建议报告写法</h2>
+          <p>若不一致条件的平均反应时高于一致条件，说明自动化阅读加工干扰了颜色命名，这就是经典 Stroop 效应。</p>
+        </section>
+      </aside>
+
+      <section class="workbench" aria-label="实验区域">
+        <div class="progress-top">
+          <div class="status-row">
+            <span id="trialCounter">尚未开始</span>
+            <span id="accuracyBadge">正确率 --</span>
+          </div>
+          <div class="meter" aria-hidden="true">
+            <div class="meter-fill" id="meterFill"></div>
+          </div>
+        </div>
+
+        <section class="screen active" id="introScreen">
+          <div class="intro-layout">
+            <div class="hero-copy">
+              <h2>看颜色，不读文字。</h2>
+              <p>本页面会呈现一系列颜色词。你的任务不是判断词写了什么，而是判断这个词的字体颜色。实验会自动记录每次按键的反应时和正确性。</p>
+            </div>
+            <div class="setup-panel">
+              <label>
+                被试编号
+                <input id="participantId" type="text" autocomplete="off" placeholder="例如 P001">
+              </label>
+              <button id="startPracticeBtn">开始练习</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="screen" id="trialScreen">
+          <div class="stimulus-wrap" aria-live="polite">
+            <div class="fixation hidden" id="fixation">+</div>
+            <div class="stimulus hidden" id="stimulus">红</div>
+            <div class="trial-note" id="trialNote">准备下一题</div>
+            <div class="feedback" id="feedback"></div>
+            <div class="response-pad" id="responsePad" aria-label="屏幕反应按钮">
+              <button data-key="d"><kbd>D</kbd><span>蓝</span><span class="swatch blue"></span></button>
+              <button data-key="f"><kbd>F</kbd><span>绿</span><span class="swatch green"></span></button>
+              <button data-key="j"><kbd>J</kbd><span>红</span><span class="swatch red"></span></button>
+              <button data-key="k"><kbd>K</kbd><span>黄</span><span class="swatch yellow"></span></button>
+            </div>
+          </div>
+        </section>
+
+        <section class="screen" id="betweenScreen">
+          <div class="intro-layout">
+            <div class="hero-copy">
+              <h2>练习结束</h2>
+              <p id="practiceSummary">现在进入正式实验。正式阶段没有逐题反馈，请继续只判断字体颜色。</p>
+            </div>
+            <button id="startMainBtn">开始正式实验</button>
+          </div>
+        </section>
+
+        <section class="screen" id="resultScreen">
+          <div class="intro-layout">
+            <div class="hero-copy">
+              <h2>实验完成</h2>
+              <p id="resultInterpretation">正在生成结果。</p>
+            </div>
+            <div class="results-grid">
+              <div class="result-card"><span>总体正确率</span><strong id="overallAccuracy">--</strong></div>
+              <div class="result-card"><span>一致条件平均反应时</span><strong id="congruentRt">--</strong></div>
+              <div class="result-card"><span>不一致条件平均反应时</span><strong id="incongruentRt">--</strong></div>
+              <div class="result-card"><span>Stroop 干扰量</span><strong id="stroopEffect">--</strong></div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>条件</th>
+                    <th>试次数</th>
+                    <th>正确数</th>
+                    <th>正确率</th>
+                    <th>正确反应平均 RT</th>
+                  </tr>
+                </thead>
+                <tbody id="resultRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <div class="controls">
+          <span class="footer-note" id="footerNote">准备好后输入被试编号，点击开始练习。</span>
+          <div class="button-row">
+            <button class="ghost" id="downloadBtn" disabled>下载 CSV</button>
+            <button class="secondary" id="restartBtn">重置实验</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const COLORS = [
+      { name: "蓝", css: "var(--blue)", key: "d", code: "blue" },
+      { name: "绿", css: "var(--green)", key: "f", code: "green" },
+      { name: "红", css: "var(--red)", key: "j", code: "red" },
+      { name: "黄", css: "var(--yellow)", key: "k", code: "yellow" }
+    ];
+
+    const state = {
+      participantId: "",
+      phase: "intro",
+      trials: [],
+      currentIndex: -1,
+      currentTrial: null,
+      accepting: false,
+      stimulusShownAt: 0,
+      responses: [],
+      timers: []
+    };
+
+    const els = {
+      stageLabel: document.querySelector("#stageLabel"),
+      trialCounter: document.querySelector("#trialCounter"),
+      accuracyBadge: document.querySelector("#accuracyBadge"),
+      meterFill: document.querySelector("#meterFill"),
+      introScreen: document.querySelector("#introScreen"),
+      trialScreen: document.querySelector("#trialScreen"),
+      betweenScreen: document.querySelector("#betweenScreen"),
+      resultScreen: document.querySelector("#resultScreen"),
+      participantId: document.querySelector("#participantId"),
+      startPracticeBtn: document.querySelector("#startPracticeBtn"),
+      startMainBtn: document.querySelector("#startMainBtn"),
+      fixation: document.querySelector("#fixation"),
+      stimulus: document.querySelector("#stimulus"),
+      trialNote: document.querySelector("#trialNote"),
+      feedback: document.querySelector("#feedback"),
+      responsePad: document.querySelector("#responsePad"),
+      practiceSummary: document.querySelector("#practiceSummary"),
+      footerNote: document.querySelector("#footerNote"),
+      downloadBtn: document.querySelector("#downloadBtn"),
+      restartBtn: document.querySelector("#restartBtn"),
+      overallAccuracy: document.querySelector("#overallAccuracy"),
+      congruentRt: document.querySelector("#congruentRt"),
+      incongruentRt: document.querySelector("#incongruentRt"),
+      stroopEffect: document.querySelector("#stroopEffect"),
+      resultInterpretation: document.querySelector("#resultInterpretation"),
+      resultRows: document.querySelector("#resultRows")
+    };
+
+    function showScreen(screen) {
+      [els.introScreen, els.trialScreen, els.betweenScreen, els.resultScreen].forEach(node => {
+        node.classList.toggle("active", node === screen);
+      });
+    }
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function makeTrials(phase) {
+      const blocks = [];
+      const repeats = phase === "practice" ? 1 : 4;
+
+      for (let repeat = 0; repeat < repeats; repeat += 1) {
+        COLORS.forEach(word => {
+          blocks.push({
+            phase,
+            condition: "congruent",
+            word: word.name,
+            ink: word.name,
+            inkCode: word.code,
+            key: word.key
+          });
+
+          const mismatches = COLORS.filter(color => color.name !== word.name);
+          const ink = mismatches[(repeat + COLORS.indexOf(word)) % mismatches.length];
+          blocks.push({
+            phase,
+            condition: "incongruent",
+            word: word.name,
+            ink: ink.name,
+            inkCode: ink.code,
+            key: ink.key
+          });
+        });
+      }
+
+      return shuffle(blocks).map((trial, index) => ({ ...trial, index: index + 1 }));
+    }
+
+    function clearTimers() {
+      state.timers.forEach(timer => clearTimeout(timer));
+      state.timers = [];
+    }
+
+    function setTimer(fn, delay) {
+      const timer = setTimeout(fn, delay);
+      state.timers.push(timer);
+      return timer;
+    }
+
+    function updateProgress() {
+      const total = state.trials.length;
+      const completed = Math.max(0, state.currentIndex);
+      const percent = total ? Math.round((completed / total) * 100) : 0;
+      els.meterFill.style.width = `${percent}%`;
+
+      if (!total) {
+        els.trialCounter.textContent = "尚未开始";
+        els.accuracyBadge.textContent = "正确率 --";
+        return;
+      }
+
+      els.trialCounter.textContent = `${state.phase === "practice" ? "练习" : "正式"} ${Math.min(completed + 1, total)} / ${total}`;
+      const phaseResponses = state.responses.filter(response => response.phase === state.phase);
+      const correct = phaseResponses.filter(response => response.correct).length;
+      const accuracy = phaseResponses.length ? Math.round((correct / phaseResponses.length) * 100) : 0;
+      els.accuracyBadge.textContent = phaseResponses.length ? `当前正确率 ${accuracy}%` : "当前正确率 --";
+    }
+
+    function startPhase(phase) {
+      clearTimers();
+      state.phase = phase;
+      state.trials = makeTrials(phase);
+      state.currentIndex = -1;
+      state.currentTrial = null;
+      state.accepting = false;
+      showScreen(els.trialScreen);
+      els.stageLabel.textContent = phase === "practice" ? "练习阶段" : "正式实验";
+      els.footerNote.textContent = "请使用键盘 D / F / J / K，或点击下方颜色按钮反应。";
+      nextTrial();
+    }
+
+    function nextTrial() {
+      clearTimers();
+      state.currentIndex += 1;
+      updateProgress();
+      els.feedback.textContent = "";
+      els.feedback.className = "feedback";
+      els.stimulus.classList.add("hidden");
+      els.fixation.classList.remove("hidden");
+      els.trialNote.textContent = "请注视中央十字";
+      state.accepting = false;
+
+      if (state.currentIndex >= state.trials.length) {
+        finishPhase();
+        return;
+      }
+
+      state.currentTrial = state.trials[state.currentIndex];
+      setTimer(showStimulus, 650);
+    }
+
+    function showStimulus() {
+      const trial = state.currentTrial;
+      els.fixation.classList.add("hidden");
+      els.stimulus.classList.remove("hidden");
+      els.stimulus.textContent = trial.word;
+      els.stimulus.style.color = `var(--${trial.inkCode})`;
+      els.trialNote.textContent = "判断字体颜色";
+      state.stimulusShownAt = performance.now();
+      state.accepting = true;
+    }
+
+    function handleResponse(key) {
+      if (!state.accepting || !state.currentTrial) return;
+
+      const normalized = key.toLowerCase();
+      const selected = COLORS.find(color => color.key === normalized);
+      if (!selected) return;
+
+      state.accepting = false;
+      const rt = Math.round(performance.now() - state.stimulusShownAt);
+      const trial = state.currentTrial;
+      const correct = normalized === trial.key;
+      const record = {
+        participantId: state.participantId,
+        phase: state.phase,
+        trial: trial.index,
+        condition: trial.condition,
+        word: trial.word,
+        ink: trial.ink,
+        correctKey: trial.key.toUpperCase(),
+        responseKey: normalized.toUpperCase(),
+        responseColor: selected.name,
+        correct,
+        rt
+      };
+
+      state.responses.push(record);
+      updateProgress();
+
+      if (state.phase === "practice") {
+        els.feedback.textContent = correct ? `正确，${rt} ms` : `错误，正确答案是 ${trial.ink}`;
+        els.feedback.className = `feedback ${correct ? "good" : "bad"}`;
+        els.trialNote.textContent = correct ? "保持速度" : "下一题继续看字体颜色";
+        setTimer(nextTrial, 850);
+      } else {
+        els.stimulus.classList.add("hidden");
+        els.trialNote.textContent = "已记录";
+        setTimer(nextTrial, 320);
+      }
+    }
+
+    function finishPhase() {
+      clearTimers();
+      els.meterFill.style.width = "100%";
+
+      if (state.phase === "practice") {
+        const practice = state.responses.filter(response => response.phase === "practice");
+        const correct = practice.filter(response => response.correct).length;
+        const accuracy = practice.length ? Math.round((correct / practice.length) * 100) : 0;
+        els.practiceSummary.textContent = `练习完成：${practice.length} 题，正确率 ${accuracy}%。现在进入正式实验；正式阶段将记录用于分析的数据。`;
+        els.stageLabel.textContent = "练习结束";
+        els.trialCounter.textContent = "练习完成";
+        els.footerNote.textContent = "休息一下，准备好后开始正式实验。";
+        showScreen(els.betweenScreen);
+        return;
+      }
+
+      renderResults();
+    }
+
+    function mean(values) {
+      if (!values.length) return null;
+      return values.reduce((sum, value) => sum + value, 0) / values.length;
+    }
+
+    function summarize(condition) {
+      const rows = state.responses.filter(response => response.phase === "main" && response.condition === condition);
+      const correctRows = rows.filter(response => response.correct);
+      return {
+        trials: rows.length,
+        correct: correctRows.length,
+        accuracy: rows.length ? correctRows.length / rows.length : 0,
+        rt: mean(correctRows.map(response => response.rt))
+      };
+    }
+
+    function renderResults() {
+      const mainRows = state.responses.filter(response => response.phase === "main");
+      const correct = mainRows.filter(response => response.correct).length;
+      const overallAccuracy = mainRows.length ? correct / mainRows.length : 0;
+      const congruent = summarize("congruent");
+      const incongruent = summarize("incongruent");
+      const effect = congruent.rt !== null && incongruent.rt !== null ? incongruent.rt - congruent.rt : null;
+
+      els.overallAccuracy.textContent = `${Math.round(overallAccuracy * 100)}%`;
+      els.congruentRt.textContent = congruent.rt === null ? "--" : `${Math.round(congruent.rt)} ms`;
+      els.incongruentRt.textContent = incongruent.rt === null ? "--" : `${Math.round(incongruent.rt)} ms`;
+      els.stroopEffect.textContent = effect === null ? "--" : `${Math.round(effect)} ms`;
+
+      const interpretation = effect === null
+        ? "有效反应不足，无法计算干扰量。"
+        : effect > 0
+          ? `不一致条件比一致条件慢 ${Math.round(effect)} ms，结果符合 Stroop 效应的预期。`
+          : `本次数据中不一致条件没有更慢，可能与试次数较少、练习效应或反应策略有关。`;
+      els.resultInterpretation.textContent = interpretation;
+
+      els.resultRows.innerHTML = [
+        ["一致", congruent],
+        ["不一致", incongruent]
+      ].map(([label, row]) => `
+        <tr>
+          <td>${label}</td>
+          <td>${row.trials}</td>
+          <td>${row.correct}</td>
+          <td>${Math.round(row.accuracy * 100)}%</td>
+          <td>${row.rt === null ? "--" : `${Math.round(row.rt)} ms`}</td>
+        </tr>
+      `).join("");
+
+      els.stageLabel.textContent = "结果";
+      els.trialCounter.textContent = "实验完成";
+      els.accuracyBadge.textContent = `总体正确率 ${Math.round(overallAccuracy * 100)}%`;
+      els.footerNote.textContent = "可以下载 CSV 数据，或重置后重新开始。";
+      els.downloadBtn.disabled = false;
+      showScreen(els.resultScreen);
+    }
+
+    function downloadCsv() {
+      const headers = [
+        "participant_id", "phase", "trial", "condition", "word", "ink",
+        "correct_key", "response_key", "response_color", "correct", "rt_ms"
+      ];
+      const lines = state.responses.map(row => [
+        row.participantId, row.phase, row.trial, row.condition, row.word, row.ink,
+        row.correctKey, row.responseKey, row.responseColor, row.correct ? 1 : 0, row.rt
+      ].map(value => `"${String(value).replaceAll('"', '""')}"`).join(","));
+      const csv = [headers.join(","), ...lines].join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const id = state.participantId || "participant";
+      link.href = url;
+      link.download = `stroop-${id}-${new Date().toISOString().slice(0, 10)}.csv`;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function resetExperiment() {
+      clearTimers();
+      Object.assign(state, {
+        participantId: "",
+        phase: "intro",
+        trials: [],
+        currentIndex: -1,
+        currentTrial: null,
+        accepting: false,
+        stimulusShownAt: 0,
+        responses: [],
+        timers: []
+      });
+      els.participantId.value = "";
+      els.downloadBtn.disabled = true;
+      els.stageLabel.textContent = "准备开始";
+      els.trialCounter.textContent = "尚未开始";
+      els.accuracyBadge.textContent = "正确率 --";
+      els.meterFill.style.width = "0%";
+      els.footerNote.textContent = "准备好后输入被试编号，点击开始练习。";
+      els.feedback.textContent = "";
+      showScreen(els.introScreen);
+    }
+
+    els.startPracticeBtn.addEventListener("click", () => {
+      state.participantId = els.participantId.value.trim() || `P${Date.now().toString().slice(-5)}`;
+      els.participantId.value = state.participantId;
+      startPhase("practice");
+    });
+
+    els.startMainBtn.addEventListener("click", () => startPhase("main"));
+    els.downloadBtn.addEventListener("click", downloadCsv);
+    els.restartBtn.addEventListener("click", resetExperiment);
+
+    els.responsePad.addEventListener("click", event => {
+      const button = event.target.closest("button[data-key]");
+      if (!button) return;
+      handleResponse(button.dataset.key);
+    });
+
+    window.addEventListener("keydown", event => {
+      if (["d", "f", "j", "k"].includes(event.key.toLowerCase())) {
+        event.preventDefault();
+        handleResponse(event.key);
+      }
+    });
+  </script>
+</body>
+</html>
