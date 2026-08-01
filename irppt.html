@@ -1,0 +1,345 @@
+[slides]
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI对高中生学习能力影响研究 - 期末汇报</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* 核心学术主题设计 */
+        :root {
+            --primary-navy: #002d5e;
+            --secondary-gold: #b3a369;
+            --bg-cream: #fdfcf9;
+            --text-dark: #1a1a1a;
+            --accent-blue: #005088;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: #e2e8f0;
+            display: grid;
+            gap: 20px;
+            grid-template-columns: 1fr;
+            padding: 20px 0;
+            place-items: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            padding: 60px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        /* 装饰元素：学术风边框与水印 */
+        .slide-container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 10px;
+            background: linear-gradient(90deg, var(--primary-navy), var(--accent-blue));
+        }
+
+        .slide-container::after {
+            content: 'Independent Research 2026 | 上海平和双语学校';
+            position: absolute;
+            bottom: 30px; right: 60px;
+            font-size: 14px; color: #94a3b8; letter-spacing: 1px;
+        }
+
+        /* 标题样式 */
+        .slide-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 44px;
+            font-weight: 700;
+            color: var(--primary-navy);
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--secondary-gold);
+            padding-bottom: 15px;
+            text-align: left;
+        }
+
+        .slide-container h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 28px;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+        }
+
+        /* 布局组件 */
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; width: 100%; height: 100%; align-items: start; }
+        
+        .bullet-list { list-style: none; }
+        .bullet-list li { margin-bottom: 18px; padding-left: 35px; position: relative; font-size: 20px; line-height: 1.5; }
+        .bullet-list i { position: absolute; left: 0; top: 6px; color: var(--secondary-gold); font-size: 22px; }
+
+        /* 表格学术风 (三线表) */
+        .academic-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .academic-table th { border-top: 2px solid var(--primary-navy); border-bottom: 1px solid var(--primary-navy); padding: 12px; text-align: left; background: #f8fafc; font-weight: 600; }
+        .academic-table td { padding: 10px 12px; border-bottom: 0.5px solid #e2e8f0; font-size: 16px; }
+        .academic-table tr:last-child td { border-bottom: 2px solid var(--primary-navy); }
+
+        /* 图标/瓷砖布局 */
+        .tiled-layout { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .tile { background: #fff; border: 1px solid #e2e8f0; padding: 25px; border-radius: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .tile .icon { font-size: 36px; color: var(--accent-blue); margin-bottom: 15px; }
+
+        /* 引用角标 */
+        sup { color: var(--accent-blue); font-weight: bold; font-size: 12px; }
+
+        /* 特殊：封面 */
+        .title-slide { justify-content: center; align-items: center; text-align: center; background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%); }
+        .title-slide h1 { font-family: 'Noto Serif SC', serif; font-size: 68px; color: var(--primary-navy); margin-bottom: 20px; }
+        .title-slide .divider { width: 120px; height: 4px; background: var(--secondary-gold); margin: 30px auto; }
+        .title-slide p { font-size: 24px; color: #64748b; }
+    </style>
+</head>
+<body>
+
+<div class="slide-container title-slide" id="slide1">
+    <h1>人工智能对中国高中生<br>学习能力的影响</h1>
+    <p>——基于问卷调查与深度访谈的混合研究</p>
+    <div class="divider"></div>
+    <p style="font-weight: 600;">汇报人：张嘉恒 | 上海平和双语学校</p>
+    <p style="font-size: 18px; margin-top: 10px;">指导老师：XXX | 提交日期：2026.06.10</p>
+</div>
+
+<div class="slide-container" id="slide2">
+    <h2 class="slide-title">一、问题提出：教育环境的新变量</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>研究背景与痛点</h3>
+                <ul class="bullet-list">
+                    <li><i class="fa-solid fa-robot"></i> <strong>现象普及：</strong>超过 70% 的高中生正在将 AI 作为日常学习的“第二大脑”。<sup>[1]</sup></li>
+                    <li><i class="fa-solid fa-triangle-exclamation"></i> <strong>核心矛盾：</strong>AI 是提供“认知支架”促进思考，还是通过直接生成答案导致“思维外延”？</li>
+                    <li><i class="fa-solid fa-bullseye"></i> <strong>本研究聚焦：</strong>非简单的“用不用”，而是“如何用”以及“后果如何”。</li>
+                </ul>
+            </div>
+            <div class="image-wrapper" style="height: 420px; border-radius: 8px; overflow: hidden;">
+                <img src="http://googleusercontent.com/image_collection/image_retrieval/3285060471875209954" alt="Student thinking with AI" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container" id="slide3">
+    <h2 class="slide-title">二、理论对话：超越技术二元论</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div style="background: #f8fafc; padding: 30px; border-left: 5px solid var(--accent-blue);">
+                <h3>对话已有理论</h3>
+                <p style="font-size: 18px; line-height: 1.6;">传统研究多聚焦于“技术赋能”<sup>[1]</sup>或“技术异化”<sup>[2]</sup>。本研究引入 <strong>“认知债务 (Cognitive Debt)”</strong> 假说，认为通过 AI 替代推导过程会产生表面上的学业成功，但实质损害高阶思维。<sup>[10]</sup></p>
+            </div>
+            <div>
+                <h3>本研究的理论创新</h3>
+                <ul class="bullet-list">
+                    <li><i class="fa-solid fa-lightbulb"></i> <strong>动态均衡观：</strong>提出“适度使用”的倒U型假说，而非线性促进观。</li>
+                    <li><i class="fa-solid fa-shield-halved"></i> <strong>调节机制：</strong>将“学校 AI 支持”作为关键调节变量，构建技术使用的社会化约束模型。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container" id="slide4">
+    <h2 class="slide-title">理论模型：AI 应用与能力的整合框架</h2>
+    <div class="content-area">
+        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 40px; display: flex; justify-content: center; align-items: center; position: relative;">
+            <div style="display: grid; grid-template-columns: 250px 100px 200px 100px 250px; align-items: center; text-align: center;">
+                <div style="border: 2px solid var(--primary-navy); padding: 15px; border-radius: 8px;">
+                    <strong>AI 应用情况</strong><br><small>类型、频率、依赖度</small>
+                </div>
+                <div style="font-size: 30px;">➔</div>
+                <div style="border: 2px dashed var(--secondary-gold); padding: 15px; border-radius: 50%;">
+                    <strong>学校 AI 支持</strong><br><small>(调节变量)</small>
+                </div>
+                <div style="font-size: 30px;">➔</div>
+                <div style="border: 2px solid var(--primary-navy); padding: 15px; border-radius: 8px;">
+                    <strong>学习能力提升</strong><br><small>自主、认知、解题</small>
+                </div>
+            </div>
+            <div style="position: absolute; bottom: 30px; border: 1px solid #ccc; padding: 5px 20px; font-size: 14px; background: #eee;">
+                控制变量：学业基础、家庭环境
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container" id="slide5">
+    <h2 class="slide-title">三、研究设计：变量测量与信效度</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>测量工具说明</h3>
+                <p style="margin-bottom: 20px;">采用 5 点李克特量表，借鉴权威学者量表并进行本土化修订。<sup>[6]</sup></p>
+                <table class="academic-table">
+                    <thead>
+                        <tr><th>核心变量</th><th>Cronbach's α</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>自主学习能力</td><td>0.87</td></tr>
+                        <tr><td>认知能力</td><td>0.89</td></tr>
+                        <tr><td>问题解决能力</td><td>0.91</td></tr>
+                        <tr><td>学校 AI 支持</td><td>0.88</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="padding-top: 20px;">
+                <div style="background: #f1f5f9; padding: 20px; border-radius: 8px;">
+                    <p><strong>效度说明：</strong>通过探索性因子分析 (EFA)，各维度因子载荷均在 0.75-0.90 之间，具备良好的内容效度与构念效度。<sup>[10]</sup></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container" id="slide6">
+    <h2 class="slide-title">资料来源与研究思路</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>资料来源 (混合研究)</h3>
+                <ul class="bullet-list">
+                    <li><i class="fa-solid fa-file-invoice"></i> <strong>定量：</strong>发放网络问卷，回收有效样本 59 份 (高一至高三)。</li>
+                    <li><i class="fa-solid fa-microphone"></i> <strong>定性：</strong>针对 IR-A 至 IR-H 8 位不同背景受访者进行半结构化访谈。</li>
+                </ul>
+            </div>
+            <div>
+                <h3>统计分析方法</h3>
+                <ul class="bullet-list">
+                    <li><i class="fa-solid fa-calculator"></i> <strong>描述统计：</strong>SPSS 26.0 频数分析。</li>
+                    <li><i class="fa-solid fa-chart-line"></i> <strong>回归分析：</strong>多元线性回归 + 二次项回归 (检验非线性关系)。</li>
+                    <li><i class="fa-solid fa-code"></i> <strong>定性编码：</strong>NVivo 三级编码分析。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container" id="slide7">
+    <h2 class="slide-title">四、研究发现：倒 U 型关系与认知债务</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>定量结果 (验证假设)</h3>
+                <ul class="bullet-list">
+                    <li><i class="fa-solid fa-check"></i> <strong>适度原则：</strong>AI 使用频率与学习能力呈显著<strong>倒 U 型关系</strong>，峰值约在 3.75h/周。</li>
+                    <li><i class="fa-solid fa-xmark"></i> <strong>思维依赖：</strong>思维依赖对能力有显著负向影响 (β=-0.24, p<0.01)，支持“认知债务”理论。</li>
+                </ul>
+            </div>
+            <div style="background: #fff; padding: 20px; border: 1px solid #ddd;">
+                <div style="height: 250px; position: relative; border-left: 2px solid #333; border-bottom: 2px solid #333;">
+                    <div style="width: 80%; height: 180px; border: 4px solid var(--accent-blue); border-radius: 50% 50% 0 0 / 100% 100% 0 0; position: absolute; bottom: 0; left: 10%; border-bottom: none;"></div>
+                    <p style="position: absolute; bottom: -30px; left: 40%;">使用频率</p>
+                    <p style="position: absolute; left: -50px; top: 40%; transform: rotate(-90deg);">能力表现</p>
+                </div>
+                <p style="text-align: center; margin-top: 40px; font-weight: bold;">最优使用区间: 3-5 小时</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container" id="slide8">
+    <h2 class="slide-title">定性发现：垫脚石 vs 拐杖</h2>
+    <div class="content-area">
+        <div class="tiled-layout">
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-mountain"></i></div>
+                <h3>AI 为垫脚石</h3>
+                <p>“绝对是先自己想……我更多是看它第一步的切入点，借鉴逻辑。” (IR-A)</p>
+                <p style="font-size: 14px; color: #666; margin-top: 10px;">—— 认知支架功能</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-crutch"></i></div>
+                <h3>AI 为拐杖</h3>
+                <p>“它像温水煮青蛙一样剥夺了我直面困难的勇气。” (IR-G)</p>
+                <p style="font-size: 14px; color: #666; margin-top: 10px;">—— 思维依赖后果</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-school"></i></div>
+                <h3>学校的调节力</h3>
+                <p>有 Prompt 讲座与规范的学校，学生更倾向于批判性使用。(IR-C/F)</p>
+                <p style="font-size: 14px; color: #666; margin-top: 10px;">—— 调节变量效应</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container" id="slide9">
+    <h2 class="slide-title">五、结论：回应核心问题</h2>
+    <div class="content-area">
+        <div style="background: var(--primary-navy); color: white; padding: 40px; border-radius: 8px;">
+            <p style="font-size: 22px; line-height: 1.8;">
+                本研究发现，AI 并非单纯的促进或阻碍因素。<strong>核心结论为：</strong><br>
+                1. 学习能力的提升取决于<strong>“思考-求助”</strong>的先后顺序；<br>
+                2. 生成型 AI 的滥用会导致严重的<strong>“认知债务”</strong>；<br>
+                3. 学校的<strong>支持与规范</strong>（均值 2.80）是扭转负面依赖的关键调节变量。
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container" id="slide10">
+    <h2 class="slide-title">对策建议：从技术依赖走向技术协同</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div class="tile">
+                <h3>对学生的建议</h3>
+                <ul class="bullet-list" style="font-size: 18px;">
+                    <li><i class="fa-solid fa-user-check"></i> 建立“先思后问”原则。</li>
+                    <li><i class="fa-solid fa-clock-rotate-left"></i> 定期进行脱离 AI 的闭卷自测。</li>
+                </ul>
+            </div>
+            <div class="tile">
+                <h3>对学校的建议</h3>
+                <ul class="bullet-list" style="font-size: 18px;">
+                    <li><i class="fa-solid fa-book-open"></i> 开设 AI 素养课程（Prompt设计、批判思维）。</li>
+                    <li><i class="fa-solid fa-gavel"></i> 建立学术诚信与 AI 使用声明制度。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container" id="slide11">
+    <h2 class="slide-title">六、主要参考文献 (部分)</h2>
+    <div class="content-area">
+        <div style="font-size: 15px; line-height: 1.4; columns: 2;">
+            <p>[1] Cai, J. G. (2025). The use of Artificial intelligence in higher education... <em>Foreign Language Learning</em>.</p>
+            <p>[2] Han, Y. Y. (2025). Cultivation of Critical Thinking in University Students... <em>Journal of Continuing Higher Education</em>.</p>
+            <p>[3] Leng, J. et al. (2024). Empowering Critical Thinking Assessment with ChatGPT. <em>Modern Distance Education Research</em>.</p>
+            <p>[4] Wang, S. et al. (2024). Design of critical information literacy education. <em>Journal of Academic Libraries</em>.</p>
+            <p>[5] Zhang, J. B. (2024). Discrimination between AI-based information literacy education. <em>Research on Library Science</em>.</p>
+            <p>[6] Li, Y., & Zhang, H. (2024). The Effect of AI on High School Students’ Learning Ability. <em>JETDE</em>.</p>
+            <p>[7] Rusandi, A. et al. (2024). Fostering critical thinking in information literacy education. <em>Journal of IT</em>.</p>
+            <p>[8] Cox, M. et al. (2024). The impact of generative AI on digital literacy. <em>Library Trends</em>.</p>
+            <p>[9] Gong, F. R. (2024). Research on the application of generative AI in digital literacy education. <em>Digital Library Forum</em>.</p>
+            <p>[10] Kosmyna, N. et al. (2025). Cognitive debt from using generative AI for writing. <em>arXiv:2506.05096</em>.</p>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container" style="text-align: center; justify-content: center;">
+    <h2 style="font-family: 'Noto Serif SC', serif; font-size: 80px; color: var(--primary-navy);">Q & A</h2>
+    <p style="font-size: 28px; color: var(--secondary-gold); margin-top: 20px;">感谢各位老师的观看与聆听</p>
+    <div style="margin-top: 50px;">
+        <p style="color: #64748b;">汇报人：张嘉恒 | 上海平和双语学校</p>
+    </div>
+</div>
+
+</body>
+</html>

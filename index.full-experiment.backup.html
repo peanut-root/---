@@ -490,15 +490,15 @@
     <header>
       <div class="brand">
         <h1>Psycholinguistic Cues in AI-Authorship Perception and L2 Text Memory</h1>
-        <p class="subtitle">Single-passage demo version for classroom presentation.</p>
+        <p class="subtitle">Full multi-passage version for classroom data collection.</p>
       </div>
       <div class="phase-badge" id="phaseBadge">Welcome</div>
     </header>
 
     <section class="progress-shell" aria-label="Experiment progress">
       <div class="progress-meta">
-        <span id="progressLabel">Demo not started</span>
-        <span id="trialLabel">Passage -- / 1</span>
+        <span id="progressLabel">Experiment not started</span>
+        <span id="trialLabel">Passage -- / 9</span>
       </div>
       <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
     </section>
@@ -506,7 +506,7 @@
     <main>
       <section class="screen active" id="welcomeScreen">
         <div class="narrow">
-          <h2>Demo Version</h2>
+          <h2>Experiment Instructions</h2>
           <p class="muted">This study examines how bilingual students judge the authorship of English texts and how different text types affect second-language memory.</p>
           <div class="cards">
             <article class="card">
@@ -524,12 +524,12 @@
           </div>
           <div class="summary-box">
             <h3>Before you begin</h3>
-            <p class="muted">This demo uses one short passage only, so the full procedure can be shown quickly. During the trial pages, the interface will show only the text, required questions, and response options so that extra instructions do not distract the participant.</p>
-            <p class="muted">The full experiment can use the same structure with 8-12 passages. This demo keeps the same data fields and CSV export format.</p>
+            <p class="muted">This full version uses multiple short passages. During the trial pages, the interface will show only the text, required questions, and response options so that extra instructions do not distract the participant.</p>
+            <p class="muted">The experiment randomizes passage order and records keyboard reaction times, accuracy, timestamps, and condition variables for each trial.</p>
           </div>
           <p class="muted">Data are anonymous and used only for classroom research. This participant page does not show researcher settings, API prompts, source labels, or debugging information.</p>
           <div class="button-row">
-            <button id="startBtn">Start Demo</button>
+            <button id="startBtn">Start Experiment</button>
           </div>
         </div>
       </section>
@@ -699,7 +699,8 @@
         <div class="narrow task-stack">
           <div>
             <h2>Thank you</h2>
-            <p class="muted">The demo is complete. Review the single-passage summary below and download the CSV file if needed.</p>
+            <p class="muted">The experiment is complete. Review the summary below and download the CSV file for analysis.</p>
+            <p class="muted" id="serverSubmitStatus">Submitting results to the researcher database...</p>
           </div>
           <div class="summary-box">
             <h3>Analysis Helper</h3>
@@ -753,21 +754,133 @@
     // Source notes are stored for the researcher only and are never shown during the experiment.
     const PASSAGES = [
       {
-        id: "DEMO01",
+        id: "H01",
+        topic: "After Class",
+        text_type: "Human-written",
+        pair_id: "school_pair",
+        source_note: "Adapted from public-domain school and student prose in Project Gutenberg educational collections.",
+        passage: "The last bell had rung, but a few pupils still moved slowly about the room. One boy stood by the window and watched the rain slide down the glass. His book was open, though he had not read a line for several minutes. The teacher gathered papers at the desk and said nothing. Outside, the yard was empty, and the wet stones shone in the pale afternoon light.",
+        memory_sentence: "One boy stood by the window and watched the rain slide down the glass.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "One boy stood by the window and watched the rain slide down the glass.",
+        recognition_correct_answer: "yes",
+        scrambled_words: ["the", "yard", "was", "empty"],
+        correct_order: "the yard was empty",
+        main_idea_question: "What is the main idea?",
+        main_idea_options: ["Students remain after class on a rainy day.", "A teacher plans a school trip.", "A boy loses his notebook."],
+        main_idea_correct: "Students remain after class on a rainy day."
+      },
+      {
+        id: "H02",
+        topic: "A Message",
+        text_type: "Human-written",
+        pair_id: "message_pair",
+        source_note: "Adapted from public-domain short fiction in Project Gutenberg classroom anthologies.",
+        passage: "Tom carried the note in his pocket and crossed the street as fast as he could without running. He knew the office door would close at five, and the clock in the square was already striking the hour. A woman with a basket stopped in front of him, so he stepped into the road and hurried past. When he reached the building, his face was hot and his hand shook on the handle.",
+        memory_sentence: "Tom carried the note in his pocket.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "Tom carried the note in his pocket.",
+        recognition_correct_answer: "yes",
+        scrambled_words: ["his", "hand", "shook", "on", "the", "handle"],
+        correct_order: "his hand shook on the handle"
+      },
+      {
+        id: "H03",
+        topic: "Morning Study",
+        text_type: "Human-written",
+        pair_id: "study_pair",
+        source_note: "Adapted from public-domain student-life prose available through Project Gutenberg.",
+        passage: "At breakfast, Mary placed her grammar book beside the plate and tried to learn three rules before school. The room was noisy, and her younger brother kept asking for more bread. She put one finger on the page and repeated the example under her breath. The sentence sounded plain, but she liked the order of it. By the time she left home, she could remember every word.",
+        memory_sentence: "Mary placed her grammar book beside the plate.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "Mary placed her grammar book beside the plate.",
+        recognition_correct_answer: "yes",
+        scrambled_words: ["she", "could", "remember", "every", "word"],
+        correct_order: "she could remember every word"
+      },
+      {
+        id: "AI01",
+        topic: "After Class",
+        text_type: "AI-generated",
+        pair_id: "school_pair",
+        source_note: "AI-generated matched material created for this classroom experiment.",
+        passage: "After class, several students stayed in the room to finish their work. The rain outside made the classroom quiet, and the desks looked neat under the soft light. One student reviewed his notes while the teacher organized papers near the front. Although the day had been long, the room felt calm and useful. The students could use the extra time to prepare for the next lesson.",
+        memory_sentence: "The rain outside made the classroom quiet.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "The students could use the extra time to prepare for the next lesson.",
+        recognition_correct_answer: "yes",
+        scrambled_words: ["the", "room", "felt", "calm", "and", "useful"],
+        correct_order: "the room felt calm and useful"
+      },
+      {
+        id: "AI02",
+        topic: "A Message",
+        text_type: "AI-generated",
+        pair_id: "message_pair",
+        source_note: "AI-generated matched material created for this classroom experiment.",
+        passage: "A student was asked to deliver an important message before the office closed. He walked quickly through the busy street and checked the time on the clock tower. Many people were moving in different directions, so he had to stay focused. When he arrived at the building, he felt nervous but responsible. Delivering the message on time showed that he could complete a task under pressure.",
+        memory_sentence: "He walked quickly through the busy street.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "The office door had already been locked before he arrived.",
+        recognition_correct_answer: "no",
+        scrambled_words: ["he", "felt", "nervous", "but", "responsible"],
+        correct_order: "he felt nervous but responsible"
+      },
+      {
+        id: "AI03",
+        topic: "Morning Study",
+        text_type: "AI-generated",
+        pair_id: "study_pair",
+        source_note: "AI-generated matched material created for this classroom experiment.",
+        passage: "Before school, a student reviewed a grammar lesson at the breakfast table. The house was busy, but she tried to concentrate on the examples in her book. Repeating the sentences helped her remember the rule more clearly. She knew that regular practice could improve her confidence in English. When she left for class, she felt better prepared and more organized for the day.",
+        memory_sentence: "The house was busy, but she tried to concentrate.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "The house was silent because everyone had already left.",
+        recognition_correct_answer: "no",
+        scrambled_words: ["regular", "practice", "could", "improve", "her", "confidence"],
+        correct_order: "regular practice could improve her confidence"
+      },
+      {
+        id: "HY01",
         topic: "After Class",
         text_type: "Human-AI hybrid",
-        pair_id: "demo_pair",
-        source_note: "Demo material: human-style public-domain classroom prose revised into a smoother hybrid-style paragraph for demonstration only.",
-        passage: "The last bell had rung, but a few students still stayed in the classroom while the rain moved down the window. One boy looked at his open book without turning the page. The teacher quietly collected papers at the desk. Nothing important happened, yet the empty yard and wet stones made the afternoon feel still and a little lonely.",
-        memory_sentence: "One boy looked at his open book without turning the page.",
+        pair_id: "school_pair",
+        source_note: "Human-style narrative revised into a smoother hybrid version for this classroom experiment.",
+        passage: "The bell had already rung, but a few students remained in the classroom while the rain continued outside. One boy looked through the window instead of reading his open book. The teacher quietly collected papers at the desk, creating a calm atmosphere after a long day. Although nothing important happened, the empty yard and wet stones made the afternoon feel unusually still.",
+        memory_sentence: "One boy looked through the window instead of reading his open book.",
         recognition_question: "Did this sentence appear in the passage?",
-        recognition_sentence: "One boy looked at his open book without turning the page.",
+        recognition_sentence: "One boy looked through the window instead of reading his open book.",
         recognition_correct_answer: "yes",
-        scrambled_words: ["the", "afternoon", "feel", "still", "and", "lonely"],
-        correct_order: "the afternoon feel still and lonely",
-        main_idea_question: "What is the main idea?",
-        main_idea_options: ["A quiet classroom after the bell", "A race across town", "A family dinner"],
-        main_idea_correct: "A quiet classroom after the bell"
+        scrambled_words: ["the", "afternoon", "feel", "unusually", "still"],
+        correct_order: "the afternoon feel unusually still"
+      },
+      {
+        id: "HY02",
+        topic: "A Message",
+        text_type: "Human-AI hybrid",
+        pair_id: "message_pair",
+        source_note: "Human-style event narrative revised into a smoother hybrid version for this classroom experiment.",
+        passage: "Tom kept the note in his pocket and moved quickly toward the office before it closed. The clock in the square was already striking five, and the street was crowded with people. When a woman carrying a basket blocked the way, he stepped around her and hurried on. By the time he reached the door, his face was warm and his hand was shaking.",
+        memory_sentence: "The clock in the square was already striking five.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "The clock in the square was already striking five.",
+        recognition_correct_answer: "yes",
+        scrambled_words: ["his", "face", "was", "warm"],
+        correct_order: "his face was warm"
+      },
+      {
+        id: "HY03",
+        topic: "Morning Study",
+        text_type: "Human-AI hybrid",
+        pair_id: "study_pair",
+        source_note: "Human-style student-life narrative revised into a smoother hybrid version for this classroom experiment.",
+        passage: "Mary studied her grammar book during breakfast and tried to memorize several rules before school. The room was noisy because her younger brother kept asking for bread, but she continued reading. She pointed to the page and repeated one example quietly. The sentence was simple, yet its order helped her understand the lesson. When she left home, she felt that the words had stayed in her mind.",
+        memory_sentence: "She pointed to the page and repeated one example quietly.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "She pointed to the page and repeated one example quietly.",
+        recognition_correct_answer: "yes",
+        scrambled_words: ["the", "words", "had", "stayed", "in", "her", "mind"],
+        correct_order: "the words had stayed in her mind"
       }
     ];
 
@@ -795,6 +908,7 @@
 
     const state = {
       participant: {},
+      submissionId: "",
       trials: [],
       currentIndex: -1,
       current: null,
@@ -850,7 +964,7 @@
       const completed = Math.max(0, state.results.length);
       const percent = total ? Math.round((completed / total) * 100) : 0;
       els.progressFill.style.width = `${percent}%`;
-      els.progressLabel.textContent = state.trials.length ? `${completed} of ${total} passage completed` : "Demo not started";
+      els.progressLabel.textContent = state.trials.length ? `${completed} of ${total} passages completed` : "Experiment not started";
       const displayIndex = state.currentIndex >= 0 ? Math.min(state.currentIndex + 1, total) : "--";
       els.trialLabel.textContent = `Passage ${displayIndex} / ${total}`;
     }
@@ -905,6 +1019,7 @@
       const payload = {
         saved_at: new Date().toISOString(),
         participant: state.participant,
+        submissionId: state.submissionId,
         currentIndex: state.currentIndex,
         currentData: state.currentData,
         results: state.results
@@ -965,6 +1080,7 @@
         ai_use_frequency: $("#aiUseFrequency").value,
         ai_writing_familiarity: $("#aiWritingFamiliarity").value
       };
+      state.submissionId = `${state.participant.participant_id}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
     }
 
     // Trial order is randomized once per participant at the start of the experiment.
@@ -987,6 +1103,7 @@
       state.current = state.trials[state.currentIndex];
       state.currentData = {
         timestamp: new Date().toISOString(),
+        client_submission_id: state.submissionId,
         ...state.participant,
         trial_number: state.currentIndex + 1,
         text_id: state.current.id,
@@ -1207,6 +1324,35 @@
       `).join("");
 
       showScreen(els.end, "Complete");
+      submitResultsToServer();
+    }
+
+    async function submitResultsToServer() {
+      const status = $("#serverSubmitStatus");
+      if (!state.results.length) {
+        status.textContent = "No rows were generated for submission.";
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/submit-results", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            submission_id: state.submissionId,
+            participant_id: state.participant.participant_id,
+            rows: state.results
+          })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Server submission failed.");
+        status.textContent = data.duplicate
+          ? `Already submitted. Participant number: ${data.participant_number}.`
+          : `Submitted successfully. Participant number: ${data.participant_number}. Rows saved: ${data.row_count}.`;
+        clearDraft();
+      } catch (error) {
+        status.textContent = `Server submission failed: ${error.message}. Please use Download CSV as a backup.`;
+      }
     }
 
     function toCsvValue(value) {
@@ -1218,6 +1364,7 @@
       const columns = [
         "timestamp",
         "participant_id",
+        "client_submission_id",
         "trial_number",
         "condition",
         "response",
@@ -1272,7 +1419,7 @@
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `psycholinguistics-ai-authorship-demo-${state.participant.participant_id || "anonymous"}.csv`;
+      link.download = `psycholinguistics-ai-authorship-full-${state.participant.participant_id || "anonymous"}.csv`;
       link.click();
       URL.revokeObjectURL(url);
     }
@@ -1333,6 +1480,7 @@
     $("#downloadCsvBtn").addEventListener("click", downloadCsv);
     $("#restartBtn").addEventListener("click", () => {
       state.participant = {};
+      state.submissionId = "";
       state.trials = [];
       state.currentIndex = -1;
       state.current = null;

@@ -1,0 +1,1345 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Console | AI Authorship and L2 Memory Experiment</title>
+  <style>
+    :root {
+      --bg: #f4f8fc;
+      --panel: #ffffff;
+      --ink: #172033;
+      --muted: #64748b;
+      --line: #d8e3ef;
+      --blue: #2563eb;
+      --blue-dark: #1d4ed8;
+      --blue-soft: #eaf2ff;
+      --green: #15803d;
+      --red: #b91c1c;
+      --amber: #a16207;
+      --shadow: 0 18px 46px rgba(30, 64, 175, .12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        linear-gradient(135deg, rgba(37, 99, 235, .1), transparent 34%),
+        linear-gradient(225deg, rgba(14, 165, 233, .08), transparent 30%),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .shell {
+      width: min(1240px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 34px;
+      display: grid;
+      gap: 16px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(26px, 4vw, 42px);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      font-size: 17px;
+    }
+
+    .muted {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .pill {
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .82);
+      color: var(--blue-dark);
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .language-select {
+      width: auto;
+      min-width: 138px;
+      padding: 9px 11px;
+      border-radius: 8px;
+      color: var(--blue-dark);
+      font-weight: 850;
+      background: rgba(255, 255, 255, .9);
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .86);
+    }
+
+    nav a {
+      color: var(--blue-dark);
+      text-decoration: none;
+      font-weight: 850;
+      padding: 8px 10px;
+      border-radius: 8px;
+    }
+
+    nav a:hover {
+      background: var(--blue-soft);
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    section {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .94);
+      box-shadow: var(--shadow);
+      padding: clamp(16px, 3vw, 24px);
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+    }
+
+    label span {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid #c9d7e8;
+      border-radius: 8px;
+      padding: 11px 12px;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, .13);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 15px;
+      color: #fff;
+      background: var(--blue);
+      font-weight: 850;
+      cursor: pointer;
+      box-shadow: 0 12px 24px rgba(37, 99, 235, .2);
+    }
+
+    button.secondary {
+      background: #e2eaf5;
+      color: var(--ink);
+      box-shadow: none;
+    }
+
+    button.danger {
+      background: var(--red);
+    }
+
+    button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .card,
+    .candidate {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfdff;
+      padding: 14px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .card strong {
+      font-size: 30px;
+      letter-spacing: 0;
+    }
+
+    .status {
+      min-height: 22px;
+      color: var(--blue-dark);
+      font-weight: 850;
+    }
+
+    .status.warn {
+      color: var(--amber);
+    }
+
+    .status.bad {
+      color: var(--red);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      min-width: 920px;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 10px 11px;
+      border-bottom: 1px solid #e8eef7;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      background: #f7fbff;
+      font-weight: 850;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 5px;
+      background: var(--blue-soft);
+      color: var(--blue-dark);
+    }
+
+    @media (max-width: 820px) {
+      .shell {
+        width: calc(100% - 18px);
+        padding-top: 12px;
+      }
+
+      header,
+      .grid,
+      .grid.two,
+      .card-grid {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+
+      .pill {
+        white-space: normal;
+      }
+
+      .header-actions {
+        justify-content: stretch;
+      }
+
+      .language-select {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div>
+        <h1>Researcher Admin Console</h1>
+        <p class="muted">Experiment configuration, text/API management, participant publishing, and data recovery for the AI-authorship and L2 memory study.</p>
+      </div>
+      <div class="header-actions">
+        <select id="languageSelect" class="language-select" aria-label="Interface language">
+          <option value="en">English</option>
+          <option value="zh">中文</option>
+        </select>
+        <div class="pill" id="researcherPill">Researcher view only</div>
+      </div>
+    </header>
+
+    <nav aria-label="Admin sections">
+      <a href="#parameters">Parameters</a>
+      <a href="#generation">AI generation</a>
+      <a href="#corpus">Corpus</a>
+      <a href="#publish">Publish</a>
+      <a href="#data">Data</a>
+      <a href="#monitor">Monitor</a>
+    </nav>
+
+    <main>
+      <section id="parameters">
+        <div>
+          <h2>Experiment Parameters</h2>
+          <p class="muted">Configure the study before deployment. Participant pages do not display these settings.</p>
+        </div>
+        <div class="grid">
+          <label>
+            <span>Text count</span>
+            <select id="textCount">
+              <option value="8">8 passages</option>
+              <option value="9" selected>9 passages</option>
+              <option value="10">10 passages</option>
+              <option value="11">11 passages</option>
+              <option value="12">12 passages</option>
+            </select>
+          </label>
+          <label>
+            <span>Genre</span>
+            <select id="genre">
+              <option value="Narrative" selected>Narrative</option>
+            </select>
+          </label>
+          <label>
+            <span>Filler task</span>
+            <select id="fillerEnabled">
+              <option value="true" selected>Enabled: vowel/consonant key task</option>
+              <option value="false">Disabled</option>
+            </select>
+          </label>
+          <label>
+            <span>Human condition count</span>
+            <input id="humanCount" type="number" min="0" max="12" value="3">
+          </label>
+          <label>
+            <span>AI condition count</span>
+            <input id="aiCount" type="number" min="0" max="12" value="3">
+          </label>
+          <label>
+            <span>Hybrid condition count</span>
+            <input id="hybridCount" type="number" min="0" max="12" value="3">
+          </label>
+          <label>
+            <span>Order</span>
+            <select id="randomizeOrder">
+              <option value="true" selected>Randomized per participant</option>
+              <option value="false">Fixed corpus order</option>
+            </select>
+          </label>
+          <label>
+            <span>Primary key mapping</span>
+            <input value="1/2/3/4 authorship; F/J recognition; V/C or O/E filler" readonly>
+          </label>
+          <label>
+            <span>Participant target</span>
+            <input id="targetN" type="number" min="1" value="100">
+          </label>
+        </div>
+        <div class="button-row">
+          <button id="saveConfigBtn">Save Admin Config</button>
+          <button class="secondary" id="exportConfigBtn">Export Config JSON</button>
+          <span class="status" id="configStatus"></span>
+        </div>
+      </section>
+
+      <section id="generation">
+        <div>
+          <h2>AI Text Backend Generation</h2>
+          <p class="muted">Calls server-side <code>/api/generate-text</code>. The API key must stay in server environment variables, never in the participant page.</p>
+        </div>
+        <div class="grid">
+          <label>
+            <span>Backend endpoint</span>
+            <input id="apiEndpoint" value="/api/generate-text">
+          </label>
+          <label>
+            <span>OpenAI-compatible base URL</span>
+            <input id="apiBaseUrl" value="https://api.chatanywhere.tech/v1">
+          </label>
+          <label>
+            <span>OpenAI model</span>
+            <input id="model" value="gpt-4o-mini">
+          </label>
+          <label>
+            <span>Temperature</span>
+            <input id="temperature" type="number" min="0" max="1" step="0.05" value="0.2">
+          </label>
+          <label>
+            <span>Candidate count</span>
+            <select id="candidateCount">
+              <option value="3" selected>3 candidates</option>
+              <option value="2">2 candidates</option>
+              <option value="1">1 candidate</option>
+              <option value="5">5 candidates</option>
+            </select>
+          </label>
+          <label>
+            <span>Target condition</span>
+            <select id="generationCondition">
+              <option value="AI-generated">AI-generated</option>
+              <option value="Human-AI hybrid">Human-AI hybrid</option>
+              <option value="Human-written">Human-written</option>
+            </select>
+          </label>
+          <label>
+            <span>Topic</span>
+            <input id="generationTopic" value="After Class">
+          </label>
+          <label class="full">
+            <span>System instruction / AI role</span>
+            <textarea id="systemInstruction">You are a controlled text generator for a psycholinguistics experiment. Your job is to produce stable, concise English narrative stimuli that match a human-written reference in length, difficulty, concreteness, and style. Return valid JSON only. Do not mention AI, authorship, experiments, prompts, or generation.</textarea>
+          </label>
+          <label class="full">
+            <span>Human reference passage</span>
+            <textarea id="referencePassage">The last bell had rung, but a few pupils still moved slowly about the room. One boy stood by the window and watched the rain slide down the glass. His book was open, though he had not read a line for several minutes.</textarea>
+          </label>
+          <label class="full">
+            <span>Structured prompt preview</span>
+            <textarea id="promptPreview" readonly></textarea>
+          </label>
+        </div>
+        <div class="button-row">
+          <button id="generateBtn">Generate 3 Candidates</button>
+          <button class="secondary" id="refreshPromptBtn">Refresh Prompt Preview</button>
+          <span class="status" id="generationStatus"></span>
+        </div>
+        <div class="grid" id="candidateList"></div>
+      </section>
+
+      <section id="corpus">
+        <div>
+          <h2>Corpus Management</h2>
+          <p class="muted">Paste human-written text, store AI-generated candidates, or manually create Hybrid passages. Labels are for the researcher only.</p>
+        </div>
+        <div class="grid">
+          <label>
+            <span>Text ID</span>
+            <input id="corpusId" value="NEW01">
+          </label>
+          <label>
+            <span>Source condition</span>
+            <select id="corpusCondition">
+              <option value="Human-written">Human-written</option>
+              <option value="AI-generated">AI-generated</option>
+              <option value="Human-AI hybrid">Human-AI hybrid</option>
+            </select>
+          </label>
+          <label>
+            <span>Topic</span>
+            <input id="corpusTopic" value="After Class">
+          </label>
+          <label>
+            <span>Genre</span>
+            <input id="corpusGenre" value="Narrative">
+          </label>
+          <label>
+            <span>Vocabulary difficulty</span>
+            <input id="corpusDifficulty" value="B1-B2">
+          </label>
+          <label>
+            <span>Pair ID</span>
+            <input id="corpusPairId" value="pair_01">
+          </label>
+          <label class="full">
+            <span>Passage</span>
+            <textarea id="corpusPassage"></textarea>
+          </label>
+          <label class="full">
+            <span>Hybrid builder notes</span>
+            <textarea id="hybridNotes" placeholder="Optional: paste human sentence + AI revision notes here, then save as Human-AI hybrid."></textarea>
+          </label>
+        </div>
+        <div class="button-row">
+          <button id="saveCorpusBtn">Add / Update Corpus Item</button>
+          <button class="secondary" id="exportCorpusBtn">Export Corpus JSON</button>
+          <button class="secondary" id="clearCorpusBtn">Reset Demo Corpus</button>
+          <span class="status" id="corpusStatus"></span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Condition</th>
+                <th>Topic</th>
+                <th>Genre</th>
+                <th>Words</th>
+                <th>Difficulty</th>
+                <th>Preview</th>
+              </tr>
+            </thead>
+            <tbody id="corpusRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="publish">
+        <div>
+          <h2>Participant Publishing Control</h2>
+          <p class="muted">Give participants only the clean participant URL. Do not send this admin page.</p>
+        </div>
+        <div class="grid two">
+          <label>
+            <span>Demo participant link</span>
+            <input id="demoLink" readonly>
+          </label>
+          <label>
+            <span>Full participant link</span>
+            <input id="fullLink" readonly>
+          </label>
+        </div>
+        <div class="button-row">
+          <button id="copyDemoBtn">Copy Demo Link</button>
+          <button id="copyFullBtn">Copy Full Link</button>
+          <button class="secondary" id="openFullBtn">Open Full Participant Page</button>
+          <span class="status" id="publishStatus"></span>
+        </div>
+      </section>
+
+      <section id="data">
+        <div>
+          <h2>Data Recovery and Export</h2>
+          <p class="muted">For static hosting, participant CSV files can be imported here for monitoring and merged export. Backend collection can be added later.</p>
+        </div>
+        <div class="grid two">
+          <label>
+            <span>Paste CSV rows</span>
+            <textarea id="csvPaste" placeholder="Paste participant CSV content here"></textarea>
+          </label>
+          <label>
+            <span>Or upload CSV file(s)</span>
+            <input id="csvFiles" type="file" accept=".csv,text/csv" multiple>
+          </label>
+        </div>
+        <div class="button-row">
+          <button id="refreshServerDataBtn">Refresh Server Master CSV</button>
+          <button class="secondary" id="downloadServerCsvBtn">Download Server Master CSV</button>
+          <button id="importCsvBtn">Import CSV</button>
+          <button class="secondary" id="exportMergedCsvBtn">Export Merged CSV</button>
+          <button class="danger" id="clearDataBtn">Clear Imported Data</button>
+          <span class="status" id="dataStatus"></span>
+        </div>
+      </section>
+
+      <section id="monitor">
+        <div>
+          <h2>Progress Monitor</h2>
+          <p class="muted">Track imported participant data by participant ID and condition. Aim for large-N collection, then export a merged CSV.</p>
+        </div>
+        <div class="card-grid">
+          <div class="card"><span class="muted">Participants</span><strong id="participantCount">0</strong></div>
+          <div class="card"><span class="muted">Rows / trials</span><strong id="trialCount">0</strong></div>
+          <div class="card"><span class="muted">Target N</span><strong id="targetCount">100</strong></div>
+          <div class="card"><span class="muted">Completion</span><strong id="completionRate">0%</strong></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Condition</th>
+                <th>Rows</th>
+                <th>Mean RT</th>
+                <th>Mean accuracy</th>
+              </tr>
+            </thead>
+            <tbody id="conditionRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const STORAGE_KEYS = {
+      config: "aiStudyAdminConfig",
+      corpus: "aiStudyAdminCorpus",
+      data: "aiStudyAdminImportedData"
+    };
+
+    const defaultCorpus = [
+      {
+        id: "H01",
+        condition: "Human-written",
+        topic: "After Class",
+        genre: "Narrative",
+        difficulty: "B1-B2",
+        pair_id: "school_pair",
+        passage: "The last bell had rung, but a few pupils still moved slowly about the room. One boy stood by the window and watched the rain slide down the glass. His book was open, though he had not read a line for several minutes. The teacher gathered papers at the desk and said nothing."
+      },
+      {
+        id: "AI01",
+        condition: "AI-generated",
+        topic: "After Class",
+        genre: "Narrative",
+        difficulty: "B1-B2",
+        pair_id: "school_pair",
+        passage: "After class, several students stayed in the room to finish their work. The rain outside made the classroom quiet, and the desks looked neat under the soft light. One student reviewed his notes while the teacher organized papers near the front."
+      },
+      {
+        id: "HY01",
+        condition: "Human-AI hybrid",
+        topic: "After Class",
+        genre: "Narrative",
+        difficulty: "B1-B2",
+        pair_id: "school_pair",
+        passage: "The bell had already rung, but a few students remained in the classroom while the rain continued outside. One boy looked through the window instead of reading his open book. The teacher quietly collected papers at the desk."
+      }
+    ];
+
+    const state = {
+      corpus: readJson(STORAGE_KEYS.corpus, defaultCorpus),
+      importedRows: readJson(STORAGE_KEYS.data, []),
+      generatedCandidates: []
+    };
+
+    const $ = selector => document.querySelector(selector);
+
+    const I18N = {
+      en: {
+        title: "Admin Console | AI Authorship and L2 Memory Experiment",
+        htmlLang: "en",
+        labels: {
+          "#languageSelect option[value='en']": "English",
+          "#languageSelect option[value='zh']": "中文",
+          "h1": "Researcher Admin Console",
+          "header .muted": "Experiment configuration, text/API management, participant publishing, and data recovery for the AI-authorship and L2 memory study.",
+          "#researcherPill": "Researcher view only",
+          "nav a[href='#parameters']": "Parameters",
+          "nav a[href='#generation']": "AI generation",
+          "nav a[href='#corpus']": "Corpus",
+          "nav a[href='#publish']": "Publish",
+          "nav a[href='#data']": "Data",
+          "nav a[href='#monitor']": "Monitor",
+          "#parameters h2": "Experiment Parameters",
+          "#parameters .muted": "Configure the study before deployment. Participant pages do not display these settings.",
+          "#parameters label:nth-of-type(1) span": "Text count",
+          "#parameters label:nth-of-type(2) span": "Genre",
+          "#parameters label:nth-of-type(3) span": "Filler task",
+          "#parameters label:nth-of-type(4) span": "Human condition count",
+          "#parameters label:nth-of-type(5) span": "AI condition count",
+          "#parameters label:nth-of-type(6) span": "Hybrid condition count",
+          "#parameters label:nth-of-type(7) span": "Order",
+          "#parameters label:nth-of-type(8) span": "Primary key mapping",
+          "#parameters label:nth-of-type(9) span": "Participant target",
+          "#saveConfigBtn": "Save Admin Config",
+          "#exportConfigBtn": "Export Config JSON",
+          "#generation h2": "AI Text Backend Generation",
+          "#generation label:nth-of-type(1) span": "Backend endpoint",
+          "#generation label:nth-of-type(2) span": "OpenAI-compatible base URL",
+          "#generation label:nth-of-type(3) span": "OpenAI model",
+          "#generation label:nth-of-type(4) span": "Temperature",
+          "#generation label:nth-of-type(5) span": "Candidate count",
+          "#generation label:nth-of-type(6) span": "Target condition",
+          "#generation label:nth-of-type(7) span": "Topic",
+          "#generation label:nth-of-type(8) span": "System instruction / AI role",
+          "#generation label:nth-of-type(9) span": "Human reference passage",
+          "#generation label:nth-of-type(10) span": "Structured prompt preview",
+          "#generateBtn": "Generate 3 Candidates",
+          "#refreshPromptBtn": "Refresh Prompt Preview",
+          "#corpus h2": "Corpus Management",
+          "#corpus .muted": "Paste human-written text, store AI-generated candidates, or manually create Hybrid passages. Labels are for the researcher only.",
+          "#corpus label:nth-of-type(1) span": "Text ID",
+          "#corpus label:nth-of-type(2) span": "Source condition",
+          "#corpus label:nth-of-type(3) span": "Topic",
+          "#corpus label:nth-of-type(4) span": "Genre",
+          "#corpus label:nth-of-type(5) span": "Vocabulary difficulty",
+          "#corpus label:nth-of-type(6) span": "Pair ID",
+          "#corpus label:nth-of-type(7) span": "Passage",
+          "#corpus label:nth-of-type(8) span": "Hybrid builder notes",
+          "#saveCorpusBtn": "Add / Update Corpus Item",
+          "#exportCorpusBtn": "Export Corpus JSON",
+          "#clearCorpusBtn": "Reset Demo Corpus",
+          "#publish h2": "Participant Publishing Control",
+          "#publish .muted": "Give participants only the clean participant URL. Do not send this admin page.",
+          "#publish label:nth-of-type(1) span": "Demo participant link",
+          "#publish label:nth-of-type(2) span": "Full participant link",
+          "#copyDemoBtn": "Copy Demo Link",
+          "#copyFullBtn": "Copy Full Link",
+          "#openFullBtn": "Open Full Participant Page",
+          "#data h2": "Data Recovery and Export",
+          "#data .muted": "For static hosting, participant CSV files can be imported here for monitoring and merged export. Backend collection can be added later.",
+          "#data label:nth-of-type(1) span": "Paste CSV rows",
+          "#data label:nth-of-type(2) span": "Or upload CSV file(s)",
+          "#refreshServerDataBtn": "Refresh Server Master CSV",
+          "#downloadServerCsvBtn": "Download Server Master CSV",
+          "#importCsvBtn": "Import CSV",
+          "#exportMergedCsvBtn": "Export Merged CSV",
+          "#clearDataBtn": "Clear Imported Data",
+          "#monitor h2": "Progress Monitor",
+          "#monitor .muted": "Track imported participant data by participant ID and condition. Aim for large-N collection, then export a merged CSV.",
+          "#monitor .card:nth-of-type(1) .muted": "Participants",
+          "#monitor .card:nth-of-type(2) .muted": "Rows / trials",
+          "#monitor .card:nth-of-type(3) .muted": "Target N",
+          "#monitor .card:nth-of-type(4) .muted": "Completion"
+        },
+        html: {
+          "#generation > div:first-child .muted": "Calls server-side <code>/api/generate-text</code>. The API key must stay in server environment variables, never in the participant page."
+        },
+        placeholders: {
+          "#hybridNotes": "Optional: paste human sentence + AI revision notes here, then save as Human-AI hybrid.",
+          "#csvPaste": "Paste participant CSV content here"
+        },
+        options: {
+          "#textCount option[value='8']": "8 passages",
+          "#textCount option[value='9']": "9 passages",
+          "#textCount option[value='10']": "10 passages",
+          "#textCount option[value='11']": "11 passages",
+          "#textCount option[value='12']": "12 passages",
+          "#genre option[value='Narrative']": "Narrative",
+          "#fillerEnabled option[value='true']": "Enabled: vowel/consonant key task",
+          "#fillerEnabled option[value='false']": "Disabled",
+          "#randomizeOrder option[value='true']": "Randomized per participant",
+          "#randomizeOrder option[value='false']": "Fixed corpus order",
+          "#candidateCount option[value='3']": "3 candidates",
+          "#candidateCount option[value='2']": "2 candidates",
+          "#candidateCount option[value='1']": "1 candidate",
+          "#candidateCount option[value='5']": "5 candidates",
+          "#generationCondition option[value='AI-generated']": "AI-generated",
+          "#generationCondition option[value='Human-AI hybrid']": "Human-AI hybrid",
+          "#generationCondition option[value='Human-written']": "Human-written",
+          "#corpusCondition option[value='Human-written']": "Human-written",
+          "#corpusCondition option[value='AI-generated']": "AI-generated",
+          "#corpusCondition option[value='Human-AI hybrid']": "Human-AI hybrid"
+        },
+        tables: {
+          corpus: ["ID", "Condition", "Topic", "Genre", "Words", "Difficulty", "Preview"],
+          monitor: ["Condition", "Rows", "Mean RT", "Mean accuracy"]
+        },
+        messages: {
+          callingApi: "Calling backend API...",
+          generated: "Generated {count} candidates. Review and save one to corpus.",
+          generationUnavailable: "Generation unavailable: {message}",
+          candidateTitle: "Candidate {index}",
+          recognition: "Recognition",
+          reconstruction: "Reconstruction",
+          saveToCorpus: "Save to Corpus",
+          savedToCorpus: "Saved {id} to corpus.",
+          passageRequired: "Passage is required.",
+          savedItem: "Saved {id}.",
+          configSaved: "Configuration saved locally.",
+          corpusReset: "Corpus reset to demo items.",
+          demoCopied: "Demo link copied.",
+          fullCopied: "Full link copied.",
+          importedRows: "Imported {count} rows.",
+          serverLoaded: "Loaded server master CSV summary.",
+          serverUnavailable: "Server summary unavailable: {message}",
+          importedCleared: "Imported data cleared."
+        }
+      },
+      zh: {
+        title: "管理员控制台 | AI 文本感知与二语记忆实验",
+        htmlLang: "zh-CN",
+        labels: {
+          "#languageSelect option[value='en']": "English",
+          "#languageSelect option[value='zh']": "中文",
+          "h1": "研究者管理员控制台",
+          "header .muted": "用于 AI 文本来源感知与二语记忆研究的实验配置、文本/API 管理、被试端发布和数据回收。",
+          "#researcherPill": "仅研究者可见",
+          "nav a[href='#parameters']": "实验参数",
+          "nav a[href='#generation']": "AI 生成",
+          "nav a[href='#corpus']": "语料库",
+          "nav a[href='#publish']": "发布",
+          "nav a[href='#data']": "数据",
+          "nav a[href='#monitor']": "进度监控",
+          "#parameters h2": "实验参数配置",
+          "#parameters .muted": "部署前在这里设置实验。被试页面不会显示这些研究者参数。",
+          "#parameters label:nth-of-type(1) span": "文本数量",
+          "#parameters label:nth-of-type(2) span": "体裁",
+          "#parameters label:nth-of-type(3) span": "填充任务",
+          "#parameters label:nth-of-type(4) span": "人类文本数量",
+          "#parameters label:nth-of-type(5) span": "AI 文本数量",
+          "#parameters label:nth-of-type(6) span": "Hybrid 文本数量",
+          "#parameters label:nth-of-type(7) span": "呈现顺序",
+          "#parameters label:nth-of-type(8) span": "主要按键映射",
+          "#parameters label:nth-of-type(9) span": "目标被试数",
+          "#saveConfigBtn": "保存管理员配置",
+          "#exportConfigBtn": "导出配置 JSON",
+          "#generation h2": "AI 文本后台生成",
+          "#generation label:nth-of-type(1) span": "后台接口",
+          "#generation label:nth-of-type(2) span": "OpenAI 兼容 Base URL",
+          "#generation label:nth-of-type(3) span": "模型名称",
+          "#generation label:nth-of-type(4) span": "Temperature",
+          "#generation label:nth-of-type(5) span": "候选数量",
+          "#generation label:nth-of-type(6) span": "目标来源条件",
+          "#generation label:nth-of-type(7) span": "题材",
+          "#generation label:nth-of-type(8) span": "System instruction / AI 身份",
+          "#generation label:nth-of-type(9) span": "人类参考文本",
+          "#generation label:nth-of-type(10) span": "结构化提示词预览",
+          "#generateBtn": "生成 3 篇候选",
+          "#refreshPromptBtn": "刷新提示词预览",
+          "#corpus h2": "语料库管理",
+          "#corpus .muted": "粘贴人工文本、保存 AI 候选文本，或手动拼接 Hybrid 文本。标签只给研究者查看。",
+          "#corpus label:nth-of-type(1) span": "文本 ID",
+          "#corpus label:nth-of-type(2) span": "来源条件",
+          "#corpus label:nth-of-type(3) span": "题材",
+          "#corpus label:nth-of-type(4) span": "体裁",
+          "#corpus label:nth-of-type(5) span": "词汇难度",
+          "#corpus label:nth-of-type(6) span": "配对 ID",
+          "#corpus label:nth-of-type(7) span": "文本内容",
+          "#corpus label:nth-of-type(8) span": "Hybrid 拼接备注",
+          "#saveCorpusBtn": "添加 / 更新语料",
+          "#exportCorpusBtn": "导出语料库 JSON",
+          "#clearCorpusBtn": "重置 Demo 语料",
+          "#publish h2": "被试端发布控制",
+          "#publish .muted": "只把干净的被试端链接发给参与者，不要发送这个管理员页面。",
+          "#publish label:nth-of-type(1) span": "Demo 被试端链接",
+          "#publish label:nth-of-type(2) span": "正式被试端链接",
+          "#copyDemoBtn": "复制 Demo 链接",
+          "#copyFullBtn": "复制正式链接",
+          "#openFullBtn": "打开正式被试页面",
+          "#data h2": "数据回收与导出",
+          "#data .muted": "可在这里导入被试 CSV 进行监控和合并导出；当前本地服务器也支持正式实验自动写入 Master CSV。",
+          "#data label:nth-of-type(1) span": "粘贴 CSV 数据",
+          "#data label:nth-of-type(2) span": "或上传 CSV 文件",
+          "#refreshServerDataBtn": "刷新服务器 Master CSV",
+          "#downloadServerCsvBtn": "下载服务器 Master CSV",
+          "#importCsvBtn": "导入 CSV",
+          "#exportMergedCsvBtn": "导出合并 CSV",
+          "#clearDataBtn": "清空已导入数据",
+          "#monitor h2": "进度监控",
+          "#monitor .muted": "按被试 ID 和条件追踪已回收数据。目标是尽量收集较大样本，并最终导出合并 CSV。",
+          "#monitor .card:nth-of-type(1) .muted": "被试人数",
+          "#monitor .card:nth-of-type(2) .muted": "数据行 / 试次",
+          "#monitor .card:nth-of-type(3) .muted": "目标 N",
+          "#monitor .card:nth-of-type(4) .muted": "完成度"
+        },
+        html: {
+          "#generation > div:first-child .muted": "调用服务器端 <code>/api/generate-text</code>。API key 应保存在服务器环境变量里，不会出现在被试页面。"
+        },
+        placeholders: {
+          "#hybridNotes": "可选：在这里粘贴人工句子 + AI 修改说明，然后保存为 Human-AI hybrid。",
+          "#csvPaste": "在这里粘贴被试 CSV 内容"
+        },
+        options: {
+          "#textCount option[value='8']": "8 段文本",
+          "#textCount option[value='9']": "9 段文本",
+          "#textCount option[value='10']": "10 段文本",
+          "#textCount option[value='11']": "11 段文本",
+          "#textCount option[value='12']": "12 段文本",
+          "#genre option[value='Narrative']": "记叙文 Narrative",
+          "#fillerEnabled option[value='true']": "启用：元音/辅音按键任务",
+          "#fillerEnabled option[value='false']": "关闭",
+          "#randomizeOrder option[value='true']": "每位被试随机顺序",
+          "#randomizeOrder option[value='false']": "固定语料顺序",
+          "#candidateCount option[value='3']": "3 篇候选",
+          "#candidateCount option[value='2']": "2 篇候选",
+          "#candidateCount option[value='1']": "1 篇候选",
+          "#candidateCount option[value='5']": "5 篇候选",
+          "#generationCondition option[value='AI-generated']": "AI-generated（AI 生成）",
+          "#generationCondition option[value='Human-AI hybrid']": "Human-AI hybrid（人机混合）",
+          "#generationCondition option[value='Human-written']": "Human-written（人工撰写）",
+          "#corpusCondition option[value='Human-written']": "Human-written（人工撰写）",
+          "#corpusCondition option[value='AI-generated']": "AI-generated（AI 生成）",
+          "#corpusCondition option[value='Human-AI hybrid']": "Human-AI hybrid（人机混合）"
+        },
+        tables: {
+          corpus: ["ID", "条件", "题材", "体裁", "词数", "难度", "预览"],
+          monitor: ["条件", "行数", "平均 RT", "平均正确率"]
+        },
+        messages: {
+          callingApi: "正在调用后台 API...",
+          generated: "已生成 {count} 篇候选文本。请检查后选择一篇保存到语料库。",
+          generationUnavailable: "生成不可用：{message}",
+          candidateTitle: "候选 {index}",
+          recognition: "再认句",
+          reconstruction: "重组答案",
+          saveToCorpus: "保存到语料库",
+          savedToCorpus: "已将 {id} 保存到语料库。",
+          passageRequired: "必须填写文本内容。",
+          savedItem: "已保存 {id}。",
+          configSaved: "配置已保存到本地浏览器。",
+          corpusReset: "语料库已重置为 Demo 项目。",
+          demoCopied: "Demo 链接已复制。",
+          fullCopied: "正式实验链接已复制。",
+          importedRows: "已导入 {count} 行数据。",
+          serverLoaded: "已加载服务器 Master CSV 摘要。",
+          serverUnavailable: "无法加载服务器摘要：{message}",
+          importedCleared: "已清空导入数据。"
+        }
+      }
+    };
+
+    function activeLang() {
+      return localStorage.getItem("aiStudyAdminLanguage") || "zh";
+    }
+
+    function t(key, params = {}) {
+      const messages = I18N[activeLang()]?.messages || I18N.en.messages;
+      return String(messages[key] || I18N.en.messages[key] || key).replace(/\{(\w+)\}/g, (_, name) => params[name] ?? "");
+    }
+
+    function applyTextMap(map, setter) {
+      Object.entries(map).forEach(([selector, value]) => {
+        const node = $(selector);
+        if (node) setter(node, value);
+      });
+    }
+
+    function localize(lang = activeLang()) {
+      const dict = I18N[lang] || I18N.en;
+      localStorage.setItem("aiStudyAdminLanguage", lang);
+      document.documentElement.lang = dict.htmlLang;
+      document.title = dict.title;
+      $("#languageSelect").value = lang;
+      applyTextMap(dict.labels, (node, value) => { node.textContent = value; });
+      applyTextMap(dict.html, (node, value) => { node.innerHTML = value; });
+      applyTextMap(dict.placeholders, (node, value) => { node.placeholder = value; });
+      applyTextMap(dict.options, (node, value) => { node.textContent = value; });
+      document.querySelectorAll("#corpus th").forEach((th, index) => {
+        th.textContent = dict.tables.corpus[index] || th.textContent;
+      });
+      document.querySelectorAll("#monitor th").forEach((th, index) => {
+        th.textContent = dict.tables.monitor[index] || th.textContent;
+      });
+    }
+
+    function readJson(key, fallback) {
+      try {
+        return JSON.parse(localStorage.getItem(key)) || fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function saveJson(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function wordCount(text) {
+      return String(text || "").trim().split(/\s+/).filter(Boolean).length;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function downloadText(filename, content, type = "text/plain;charset=utf-8") {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function buildPromptPreview() {
+      const topic = $("#generationTopic").value.trim() || "After Class";
+      const condition = $("#generationCondition").value;
+      const candidates = $("#candidateCount").value || "3";
+      const temperature = $("#temperature").value || "0.2";
+      const apiBaseUrl = $("#apiBaseUrl").value.trim() || "https://api.chatanywhere.tech/v1";
+      const systemInstruction = $("#systemInstruction").value.trim();
+      const reference = $("#referencePassage").value.trim();
+      $("#promptPreview").value = [
+        "SYSTEM:",
+        systemInstruction,
+        "",
+        "ROLE: You are a research assistant preparing controlled psycholinguistic stimuli.",
+        "TASK: Generate matched English narrative passages for AI-authorship perception and L2 memory testing.",
+        `CONFIG: condition=${condition}; genre=Narrative; topic=${topic}; candidates=${candidates}; temperature=${temperature}; api_base_url=${apiBaseUrl}; target_words=80-100.`,
+        "CONSTRAINTS: CEFR B1-B2; simple student-readable English; concrete event narrative; avoid explicit AI/authorship/meta-experiment wording.",
+        "FEW-SHOT TARGET: A controlled narrative describes one small everyday event, includes sensory or time details, and avoids argumentative conclusions.",
+        "HUMAN REFERENCE:",
+        reference || "(none)"
+      ].join("\n");
+    }
+
+    async function generateCandidates() {
+      buildPromptPreview();
+      const button = $("#generateBtn");
+      button.disabled = true;
+      $("#generationStatus").className = "status";
+      $("#generationStatus").textContent = t("callingApi");
+      $("#candidateList").innerHTML = "";
+
+      try {
+        const response = await fetch($("#apiEndpoint").value.trim() || "/api/generate-text", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: $("#model").value.trim() || "gpt-4o-mini",
+            apiBaseUrl: $("#apiBaseUrl").value.trim() || "https://api.chatanywhere.tech/v1",
+            systemInstruction: $("#systemInstruction").value.trim(),
+            condition: $("#generationCondition").value,
+            topic: $("#generationTopic").value.trim() || "After Class",
+            referencePassage: $("#referencePassage").value.trim(),
+            targetWords: 85,
+            candidates: Number($("#candidateCount").value || 3),
+            temperature: Number($("#temperature").value || 0.2)
+          })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Generation failed");
+        state.generatedCandidates = data.candidates || [];
+        renderCandidates(state.generatedCandidates);
+        $("#generationStatus").textContent = t("generated", { count: state.generatedCandidates.length });
+      } catch (error) {
+        $("#generationStatus").className = "status bad";
+        $("#generationStatus").textContent = t("generationUnavailable", { message: error.message });
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    function renderCandidates(candidates) {
+      $("#candidateList").innerHTML = candidates.map((candidate, index) => `
+        <article class="candidate">
+          <h3>${escapeHtml(t("candidateTitle", { index: index + 1 }))}</h3>
+          <p>${escapeHtml(candidate.passage || "")}</p>
+          <p class="muted">${escapeHtml(t("recognition"))}: ${escapeHtml(candidate.recognition_sentence || "")}</p>
+          <p class="muted">${escapeHtml(t("reconstruction"))}: ${escapeHtml(candidate.correct_order || "")}</p>
+          <button data-candidate="${index}" type="button">${escapeHtml(t("saveToCorpus"))}</button>
+        </article>
+      `).join("");
+      $("#candidateList").querySelectorAll("[data-candidate]").forEach(button => {
+        button.addEventListener("click", () => {
+          const candidate = candidates[Number(button.dataset.candidate)];
+          const id = `${$("#generationCondition").value.startsWith("AI") ? "AI" : "HY"}${String(Date.now()).slice(-5)}`;
+          upsertCorpus({
+            id,
+            condition: $("#generationCondition").value,
+            topic: $("#generationTopic").value.trim() || "After Class",
+            genre: "Narrative",
+            difficulty: "B1-B2",
+            pair_id: `generated_${Date.now()}`,
+            passage: candidate.passage || "",
+            recognition_sentence: candidate.recognition_sentence || "",
+            recognition_correct_answer: candidate.recognition_correct_answer || "yes",
+            scrambled_words: Array.isArray(candidate.scrambled_words) ? candidate.scrambled_words : [],
+            correct_order: candidate.correct_order || ""
+          });
+          $("#generationStatus").textContent = t("savedToCorpus", { id });
+        });
+      });
+    }
+
+    function upsertCorpus(item) {
+      const index = state.corpus.findIndex(row => row.id === item.id);
+      if (index >= 0) state.corpus[index] = item;
+      else state.corpus.push(item);
+      saveJson(STORAGE_KEYS.corpus, state.corpus);
+      renderCorpus();
+    }
+
+    function renderCorpus() {
+      $("#corpusRows").innerHTML = state.corpus.map(row => `
+        <tr>
+          <td>${escapeHtml(row.id)}</td>
+          <td>${escapeHtml(row.condition)}</td>
+          <td>${escapeHtml(row.topic)}</td>
+          <td>${escapeHtml(row.genre)}</td>
+          <td>${wordCount(row.passage)}</td>
+          <td>${escapeHtml(row.difficulty)}</td>
+          <td>${escapeHtml(String(row.passage || "").slice(0, 130))}${String(row.passage || "").length > 130 ? "..." : ""}</td>
+        </tr>
+      `).join("");
+    }
+
+    function saveCorpusFromForm() {
+      const item = {
+        id: $("#corpusId").value.trim() || `TXT${Date.now()}`,
+        condition: $("#corpusCondition").value,
+        topic: $("#corpusTopic").value.trim() || "Untitled",
+        genre: $("#corpusGenre").value.trim() || "Narrative",
+        difficulty: $("#corpusDifficulty").value.trim() || "B1-B2",
+        pair_id: $("#corpusPairId").value.trim(),
+        passage: $("#corpusPassage").value.trim(),
+        notes: $("#hybridNotes").value.trim()
+      };
+      if (!item.passage) {
+        $("#corpusStatus").className = "status bad";
+        $("#corpusStatus").textContent = t("passageRequired");
+        return;
+      }
+      upsertCorpus(item);
+      $("#corpusStatus").className = "status";
+      $("#corpusStatus").textContent = t("savedItem", { id: item.id });
+    }
+
+    function saveConfig() {
+      const config = {
+        text_count: Number($("#textCount").value),
+        genre: $("#genre").value,
+        filler_enabled: $("#fillerEnabled").value === "true",
+        allocation: {
+          Human: Number($("#humanCount").value),
+          AI: Number($("#aiCount").value),
+          Hybrid: Number($("#hybridCount").value)
+        },
+        randomize_order: $("#randomizeOrder").value === "true",
+        target_n: Number($("#targetN").value),
+        saved_at: new Date().toISOString()
+      };
+      saveJson(STORAGE_KEYS.config, config);
+      $("#targetCount").textContent = config.target_n;
+      $("#configStatus").textContent = t("configSaved");
+      return config;
+    }
+
+    function parseCsv(text) {
+      const rows = [];
+      let row = [];
+      let value = "";
+      let quoted = false;
+      for (let i = 0; i < text.length; i += 1) {
+        const char = text[i];
+        const next = text[i + 1];
+        if (quoted && char === '"' && next === '"') {
+          value += '"';
+          i += 1;
+        } else if (char === '"') {
+          quoted = !quoted;
+        } else if (!quoted && char === ",") {
+          row.push(value);
+          value = "";
+        } else if (!quoted && (char === "\n" || char === "\r")) {
+          if (char === "\r" && next === "\n") i += 1;
+          row.push(value);
+          if (row.some(cell => cell.trim())) rows.push(row);
+          row = [];
+          value = "";
+        } else {
+          value += char;
+        }
+      }
+      row.push(value);
+      if (row.some(cell => cell.trim())) rows.push(row);
+      if (rows.length < 2) return [];
+      const headers = rows[0];
+      return rows.slice(1).map(values => Object.fromEntries(headers.map((header, index) => [header, values[index] || ""])));
+    }
+
+    function toCsvValue(value) {
+      return `"${String(value ?? "").replaceAll('"', '""')}"`;
+    }
+
+    function exportRowsCsv(rows) {
+      if (!rows.length) return "";
+      const columns = Array.from(rows.reduce((set, row) => {
+        Object.keys(row).forEach(key => set.add(key));
+        return set;
+      }, new Set()));
+      return [columns.join(","), ...rows.map(row => columns.map(column => toCsvValue(row[column])).join(","))].join("\n");
+    }
+
+    function importCsvText(text) {
+      const rows = parseCsv(text);
+      state.importedRows.push(...rows);
+      saveJson(STORAGE_KEYS.data, state.importedRows);
+      renderMonitor();
+      return rows.length;
+    }
+
+    async function importFiles(files) {
+      let count = 0;
+      for (const file of files) {
+        count += importCsvText(await file.text());
+      }
+      return count;
+    }
+
+    function renderLinks() {
+      const base = location.href.replace(/admin\.html(?:[#?].*)?$/, "");
+      $("#demoLink").value = `${base}index.html`;
+      $("#fullLink").value = `${base}index.full-experiment.html`;
+    }
+
+    function renderMonitor() {
+      const ids = new Set(state.importedRows.map(row => row.participant_id || row["Participant ID"]).filter(Boolean));
+      const target = Number($("#targetN").value || 100);
+      $("#participantCount").textContent = ids.size;
+      $("#trialCount").textContent = state.importedRows.length;
+      $("#targetCount").textContent = target;
+      $("#completionRate").textContent = `${Math.min(100, Math.round((ids.size / target) * 100))}%`;
+
+      const conditions = ["Human", "AI", "Hybrid", "Human-written", "AI-generated", "Human-AI hybrid"];
+      $("#conditionRows").innerHTML = conditions.map(condition => {
+        const rows = state.importedRows.filter(row => (row.condition || row.text_type) === condition);
+        if (!rows.length) return "";
+        const rtValues = rows.map(row => Number(row.rt_ms || row.authorship_rt_ms || row.recognition_rt_ms)).filter(Number.isFinite);
+        const accValues = rows.map(row => Number(row.accuracy || row.authorship_correct || row.recognition_correct)).filter(Number.isFinite);
+        const meanRt = rtValues.length ? Math.round(rtValues.reduce((a, b) => a + b, 0) / rtValues.length) : "--";
+        const meanAcc = accValues.length ? `${Math.round((accValues.reduce((a, b) => a + b, 0) / accValues.length) * 100)}%` : "--";
+        return `<tr><td>${condition}</td><td>${rows.length}</td><td>${meanRt}${meanRt === "--" ? "" : " ms"}</td><td>${meanAcc}</td></tr>`;
+      }).join("");
+    }
+
+    async function refreshServerResults() {
+      try {
+        const response = await fetch("/api/results");
+        const summary = await response.json();
+        if (!response.ok) throw new Error(summary.error || "Could not load server results.");
+        $("#participantCount").textContent = summary.participant_count || 0;
+        $("#trialCount").textContent = summary.row_count || 0;
+        const target = Number($("#targetN").value || 100);
+        $("#targetCount").textContent = target;
+        $("#completionRate").textContent = `${Math.min(100, Math.round(((summary.participant_count || 0) / target) * 100))}%`;
+        $("#conditionRows").innerHTML = Object.entries(summary.by_condition || {}).map(([condition, value]) => `
+          <tr>
+            <td>${escapeHtml(condition)}</td>
+            <td>${value.rows}</td>
+            <td>${value.mean_rt_ms === null ? "--" : `${value.mean_rt_ms} ms`}</td>
+            <td>${value.mean_accuracy === null ? "--" : `${Math.round(value.mean_accuracy * 100)}%`}</td>
+          </tr>
+        `).join("");
+        $("#dataStatus").className = "status";
+        $("#dataStatus").textContent = t("serverLoaded");
+      } catch (error) {
+        $("#dataStatus").className = "status warn";
+        $("#dataStatus").textContent = t("serverUnavailable", { message: error.message });
+        renderMonitor();
+      }
+    }
+
+    $("#saveConfigBtn").addEventListener("click", saveConfig);
+    $("#exportConfigBtn").addEventListener("click", () => {
+      const config = saveConfig();
+      downloadText("experiment-admin-config.json", JSON.stringify({ config, corpus: state.corpus }, null, 2), "application/json;charset=utf-8");
+    });
+    $("#refreshPromptBtn").addEventListener("click", buildPromptPreview);
+    $("#generateBtn").addEventListener("click", generateCandidates);
+    $("#saveCorpusBtn").addEventListener("click", saveCorpusFromForm);
+    $("#exportCorpusBtn").addEventListener("click", () => {
+      downloadText("experiment-corpus.json", JSON.stringify(state.corpus, null, 2), "application/json;charset=utf-8");
+    });
+    $("#clearCorpusBtn").addEventListener("click", () => {
+      state.corpus = [...defaultCorpus];
+      saveJson(STORAGE_KEYS.corpus, state.corpus);
+      renderCorpus();
+      $("#corpusStatus").textContent = t("corpusReset");
+    });
+    $("#copyDemoBtn").addEventListener("click", async () => {
+      await navigator.clipboard.writeText($("#demoLink").value);
+      $("#publishStatus").textContent = t("demoCopied");
+    });
+    $("#copyFullBtn").addEventListener("click", async () => {
+      await navigator.clipboard.writeText($("#fullLink").value);
+      $("#publishStatus").textContent = t("fullCopied");
+    });
+    $("#openFullBtn").addEventListener("click", () => {
+      location.href = $("#fullLink").value;
+    });
+    $("#importCsvBtn").addEventListener("click", async () => {
+      const pasted = $("#csvPaste").value.trim();
+      let count = pasted ? importCsvText(pasted) : 0;
+      count += await importFiles($("#csvFiles").files);
+      $("#dataStatus").textContent = t("importedRows", { count });
+    });
+    $("#refreshServerDataBtn").addEventListener("click", refreshServerResults);
+    $("#downloadServerCsvBtn").addEventListener("click", () => {
+      location.href = "/api/results.csv";
+    });
+    $("#exportMergedCsvBtn").addEventListener("click", () => {
+      downloadText("merged-participant-data.csv", exportRowsCsv(state.importedRows), "text/csv;charset=utf-8");
+    });
+    $("#clearDataBtn").addEventListener("click", () => {
+      state.importedRows = [];
+      saveJson(STORAGE_KEYS.data, state.importedRows);
+      renderMonitor();
+      $("#dataStatus").textContent = t("importedCleared");
+    });
+    $("#targetN").addEventListener("input", renderMonitor);
+
+    $("#languageSelect").addEventListener("change", event => {
+      localize(event.target.value);
+      buildPromptPreview();
+      renderCandidates(state.generatedCandidates);
+      renderMonitor();
+    });
+
+    localize(activeLang());
+    renderLinks();
+    buildPromptPreview();
+    renderCorpus();
+    refreshServerResults();
+  </script>
+</body>
+</html>

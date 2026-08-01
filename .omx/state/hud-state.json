@@ -1,6 +1,6 @@
 {
-  "last_turn_at": "2026-05-31T12:15:11.156Z",
-  "turn_count": 3,
-  "last_progress_at": "2026-05-31T12:15:11.156Z",
-  "last_agent_output": "已改好：[index.html](/Users/peanut/Documents/语言学/index.html)\n\n现在逻辑是：\n\n- 开始前：首页保留左侧说明区，展示实验设计、任务规则、按键映射、报"
+  "last_turn_at": "2026-08-01T12:03:28.459Z",
+  "turn_count": 22,
+  "last_progress_at": "2026-08-01T12:03:28.459Z",
+  "last_agent_output": "Refactored the demo into a full web-based experiment platform with separate participant/admin views,"
 }
