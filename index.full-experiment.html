@@ -1267,7 +1267,7 @@
     }
 
     function discardIncompleteSession() {
-      if (state.activeStage !== "Complete") {
+      if (state.activeStage !== "complete") {
         clearDraft();
       }
     }
@@ -1630,6 +1630,7 @@
     }
 
     function renderEndPage() {
+      state.activeStage = "complete";
       showScreen(els.end, "Complete");
       submitResultsToServer();
     }

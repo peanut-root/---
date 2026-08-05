@@ -1259,6 +1259,12 @@
       localStorage.removeItem(STORAGE_KEY);
     }
 
+    function discardIncompleteSession() {
+      if (state.activeStage !== "complete") {
+        clearDraft();
+      }
+    }
+
     function requestFullscreenIfPossible() {
       const root = document.documentElement;
       if (!document.fullscreenElement && root.requestFullscreen) {
@@ -1571,6 +1577,7 @@
     }
 
     function renderEndPage() {
+      state.activeStage = "complete";
       showScreen(els.end, "Complete");
       submitDemoResultsToServer();
     }
@@ -1691,7 +1698,7 @@
       }
     });
 
-    window.addEventListener("beforeunload", saveDraft);
+    window.addEventListener("beforeunload", discardIncompleteSession);
     updateProgress();
   </script>
 </body>

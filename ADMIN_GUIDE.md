@@ -50,6 +50,8 @@
 ### 6. 数据回收与导出
 
 - 正式实验完成后，数据会提交到服务器端 `data/master-results.csv`。
+- 被试中途刷新、关闭或退出页面时，该 session 会被视为未完成，不会写入正式 master CSV。
+- 后端会拒绝 trial 数量不足或缺少关键答案/RT 的正式提交。
 - 可以点击刷新服务器 Master CSV 摘要。
 - 可以下载服务器 Master CSV 用于 SPSS、R、Python 或 Excel 分析。
 - 如果有单独下载的 CSV，也可以粘贴或上传到 admin 端合并。

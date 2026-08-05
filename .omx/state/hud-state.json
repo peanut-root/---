@@ -1,6 +1,6 @@
 {
-  "last_turn_at": "2026-08-05T15:48:25.345Z",
-  "turn_count": 45,
-  "last_progress_at": "2026-08-05T15:48:25.345Z",
-  "last_agent_output": "对，你这个判断完全正确。匿名实验也必须能区分每个人，不然没法做被试内统计。\n\n其实之前 CSV 已经有这一列：\n\n```text\nparticipant_number_assigned_by_serv"
+  "last_turn_at": "2026-08-05T15:51:28.158Z",
+  "turn_count": 46,
+  "last_progress_at": "2026-08-05T15:51:28.158Z",
+  "last_agent_output": "已经改好了。\n\n现在规则是：\n\n```text\n中途刷新 / 关闭 / 退出页面 = 未完成 session\n不会写入正式 master-results.csv\n```\n\n我加了两层保护：\n\n1. *"
 }
