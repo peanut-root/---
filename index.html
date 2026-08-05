@@ -287,6 +287,16 @@
       gap: 8px;
     }
 
+    .attention {
+      border: 2px solid #f59e0b;
+      border-radius: 8px;
+      background: #fff7ed;
+      color: #7c2d12;
+      padding: 14px 16px;
+      font-weight: 850;
+      line-height: 1.55;
+    }
+
     .passage {
       font-size: 18px;
       line-height: 1.8;
@@ -397,11 +407,42 @@
 
     .chip {
       padding: 8px 10px;
-      border-radius: 999px;
+      border-radius: 8px;
       background: var(--blue-soft);
       color: var(--blue-dark);
       font-weight: 800;
       border: 1px solid #c9ddff;
+      box-shadow: none;
+    }
+
+    button.chip {
+      color: var(--blue-dark);
+      cursor: pointer;
+    }
+
+    button.chip:hover:not(:disabled) {
+      background: #dbeafe;
+      transform: none;
+    }
+
+    button.chip:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+    }
+
+    .answer-chip {
+      background: #fff;
+    }
+
+    .answer-line {
+      min-height: 54px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 2px solid #8aa4c4;
+      background: #fff;
+      padding: 10px 2px;
     }
 
     .error {
@@ -527,6 +568,9 @@
             <p class="muted">This demo uses one short passage only, so the full procedure can be shown quickly. During the trial pages, the interface will show only the text, required questions, and response options so that extra instructions do not distract the participant.</p>
             <p class="muted">The full experiment can use the same structure with 8-12 passages. This demo keeps the same data fields and CSV export format.</p>
           </div>
+          <div class="attention">
+            Please complete this study on a computer. Timed sections require keyboard responses: number keys, F/J, V/C, and Enter.
+          </div>
           <p class="muted">Data are anonymous and used only for classroom research. This participant page does not show researcher settings, API prompts, source labels, or debugging information.</p>
           <div class="button-row">
             <button id="startBtn">Start Demo</button>
@@ -537,23 +581,32 @@
       <section class="screen" id="backgroundScreen">
         <form class="narrow" id="backgroundForm">
           <h2>Participant Background</h2>
-          <p class="muted">Please complete the required screening questions. Participant ID or nickname is optional.</p>
+          <p class="muted">Please complete the required screening questions before the timed trials.</p>
           <div class="grid">
             <label>
-              <span>Participant ID or nickname (optional)</span>
-              <input id="participantId" autocomplete="off" placeholder="e.g., P001">
-            </label>
-            <label>
-              <span>Grade level *</span>
-              <input id="grade" required placeholder="e.g., Year 2 undergraduate">
-            </label>
-            <label>
-              <span>Native language *</span>
-              <input id="nativeLanguage" required placeholder="e.g., Chinese">
+              <span>Education level *</span>
+              <select id="grade" required>
+                <option value="">Select one</option>
+                <option>High school</option>
+                <option>Year 1 undergraduate</option>
+                <option>Year 2 undergraduate</option>
+                <option>Year 3 undergraduate</option>
+                <option>Year 4 undergraduate</option>
+                <option>Master's student</option>
+                <option>Doctoral student</option>
+                <option>Other</option>
+              </select>
             </label>
             <label>
               <span>Years of English learning *</span>
-              <input id="yearsEnglish" required type="number" min="0" step="0.5" placeholder="e.g., 8">
+              <select id="yearsEnglish" required>
+                <option value="">Select one</option>
+                <option value="0-3">0-3 years</option>
+                <option value="4-6">4-6 years</option>
+                <option value="7-9">7-9 years</option>
+                <option value="10-12">10-12 years</option>
+                <option value="13+">13+ years</option>
+              </select>
             </label>
             <label>
               <span>English reading proficiency *</span>
@@ -688,7 +741,7 @@
           <fieldset>
             <legend>Reconstruct the sentence using the words below. Press <kbd>Enter</kbd> to submit. *</legend>
             <div class="chips" id="scrambledWords"></div>
-            <textarea id="reconstructionInput" placeholder="Type the sentence here"></textarea>
+            <div class="answer-line" id="reconstructionAnswer" aria-label="Selected answer words"></div>
           </fieldset>
           <p class="error" id="memoryError"></p>
           <button class="hidden" id="memoryNextBtn" tabindex="-1" type="button">Save and Continue</button>
@@ -699,48 +752,8 @@
         <div class="narrow task-stack">
           <div>
             <h2>Thank you</h2>
-            <p class="muted">The demo is complete. Review the single-passage summary below and download the CSV file if needed.</p>
-          </div>
-          <div class="summary-box">
-            <h3>Analysis Helper</h3>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Text type</th>
-                    <th>Average AI-likelihood</th>
-                    <th>Average reading time</th>
-                    <th>Recognition accuracy</th>
-                    <th>Reconstruction accuracy</th>
-                  </tr>
-                </thead>
-                <tbody id="analysisRows"></tbody>
-              </table>
-            </div>
-          </div>
-          <div class="summary-box">
-            <h3>Trial Summary</h3>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Trial</th>
-                    <th>Text ID</th>
-                    <th>Text type</th>
-                    <th>Authorship judgment</th>
-                    <th>AI-likelihood</th>
-                    <th>Reading time</th>
-                    <th>Recognition</th>
-                    <th>Reconstruction</th>
-                  </tr>
-                </thead>
-                <tbody id="summaryRows"></tbody>
-              </table>
-            </div>
-          </div>
-          <div class="button-row">
-            <button id="downloadCsvBtn">Download CSV</button>
-            <button class="secondary" id="restartBtn">Restart</button>
+            <p class="muted">Thank you for completing the study.</p>
+            <p class="muted" id="serverSubmitStatus">Submitting demo results...</p>
           </div>
         </div>
       </section>
@@ -748,28 +761,352 @@
   </div>
 
   <script>
-    // Edit passage materials here. Each trial contains reading, authorship, cue-rating, and memory-test fields.
-    // Human-written passages are short classroom-ready adaptations based on public-domain Project Gutenberg materials.
-    // Source notes are stored for the researcher only and are never shown during the experiment.
+    // Human-written source pool. Each item is a short classroom-ready adaptation of public-domain narrative prose.
+    // Source metadata are stored for the researcher and CSV only; participants never see source labels.
     const PASSAGES = [
       {
-        id: "DEMO01",
-        topic: "After Class",
-        text_type: "Human-AI hybrid",
-        pair_id: "demo_pair",
-        source_note: "Demo material: human-style public-domain classroom prose revised into a smoother hybrid-style paragraph for demonstration only.",
-        passage: "The last bell had rung, but a few students still stayed in the classroom while the rain moved down the window. One boy looked at his open book without turning the page. The teacher quietly collected papers at the desk. Nothing important happened, yet the empty yard and wet stones made the afternoon feel still and a little lonely.",
-        memory_sentence: "One boy looked at his open book without turning the page.",
+        id: "H001",
+        topic: "A Garden Door",
+        text_type: "Human-written",
+        pair_id: "public_domain_pool",
+        source_title: "The Secret Garden",
+        source_author: "Frances Hodgson Burnett",
+        source_url: "https://www.gutenberg.org/ebooks/113",
+        source_note: "Adapted from public-domain human-authored narrative prose.",
+        passage: "Mary found the garden door under thick ivy and pushed it open slowly. The quiet path inside looked strange, green, and secret.",
+        memory_sentence: "Mary found the garden door under thick ivy and pushed it open slowly.",
         recognition_question: "Did this sentence appear in the passage?",
-        recognition_sentence: "One boy looked at his open book without turning the page.",
+        recognition_sentence: "Mary found the garden door under thick ivy and pushed it open slowly.",
         recognition_correct_answer: "yes",
-        scrambled_words: ["the", "afternoon", "feel", "still", "and", "lonely"],
-        correct_order: "the afternoon feel still and lonely",
-        main_idea_question: "What is the main idea?",
-        main_idea_options: ["A quiet classroom after the bell", "A race across town", "A family dinner"],
-        main_idea_correct: "A quiet classroom after the bell"
+        scrambled_words: ["the", "quiet", "path", "looked", "secret"],
+        correct_order: "the quiet path looked secret"
+      },
+      {
+        id: "H002",
+        topic: "The River Bank",
+        text_type: "Human-written",
+        pair_id: "public_domain_pool",
+        source_title: "The Wind in the Willows",
+        source_author: "Kenneth Grahame",
+        source_url: "https://www.gutenberg.org/ebooks/289",
+        source_note: "Adapted from public-domain human-authored narrative prose.",
+        passage: "Mole reached the river bank and stared at the bright water. Boats moved past him, and the whole morning seemed new.",
+        memory_sentence: "Mole reached the river bank and stared at the bright water.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "Mole reached the river bank and stared at the bright water.",
+        recognition_correct_answer: "yes",
+        scrambled_words: ["the", "whole", "morning", "seemed", "new"],
+        correct_order: "the whole morning seemed new"
+      },
+      {
+        id: "H003",
+        topic: "A White Rabbit",
+        text_type: "Human-written",
+        pair_id: "public_domain_pool",
+        source_title: "Alice's Adventures in Wonderland",
+        source_author: "Lewis Carroll",
+        source_url: "https://www.gutenberg.org/ebooks/11",
+        source_note: "Adapted from public-domain human-authored narrative prose.",
+        passage: "Alice saw a white rabbit hurry across the grass with a watch in its paw. She followed before thinking what might happen.",
+        memory_sentence: "Alice saw a white rabbit hurry across the grass with a watch in its paw.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "Alice saw a white rabbit hurry across the grass with a watch in its paw.",
+        recognition_correct_answer: "yes",
+        scrambled_words: ["she", "followed", "before", "thinking"],
+        correct_order: "she followed before thinking"
+      },
+      {
+        id: "H004",
+        topic: "The Orchard",
+        text_type: "Human-written",
+        pair_id: "public_domain_pool",
+        source_title: "Anne of Green Gables",
+        source_author: "L. M. Montgomery",
+        source_url: "https://www.gutenberg.org/ebooks/45",
+        source_note: "Adapted from public-domain human-authored narrative prose.",
+        passage: "Anne walked beneath the orchard trees and looked up at the pink blossoms. She felt the road to Green Gables was beautiful.",
+        memory_sentence: "Anne walked beneath the orchard trees and looked up at the pink blossoms.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "Anne walked beside the sea and listened to the waves.",
+        recognition_correct_answer: "no",
+        scrambled_words: ["the", "pink", "blossoms", "looked", "beautiful"],
+        correct_order: "the pink blossoms looked beautiful"
+      },
+      {
+        id: "H005",
+        topic: "A Winter Evening",
+        text_type: "Human-written",
+        pair_id: "public_domain_pool",
+        source_title: "Little Women",
+        source_author: "Louisa May Alcott",
+        source_url: "https://www.gutenberg.org/ebooks/514",
+        source_note: "Adapted from public-domain human-authored narrative prose.",
+        passage: "The four sisters sat near the fire while snow pressed against the windows. Their small room felt warm, busy, and safe.",
+        memory_sentence: "The four sisters sat near the fire while snow pressed against the windows.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "The four sisters sat near the fire while snow pressed against the windows.",
+        recognition_correct_answer: "yes",
+        scrambled_words: ["the", "room", "felt", "warm"],
+        correct_order: "the room felt warm"
+      },
+      {
+        id: "H006",
+        topic: "The Island Shore",
+        text_type: "Human-written",
+        pair_id: "public_domain_pool",
+        source_title: "Treasure Island",
+        source_author: "Robert Louis Stevenson",
+        source_url: "https://www.gutenberg.org/ebooks/120",
+        source_note: "Adapted from public-domain human-authored narrative prose.",
+        passage: "Jim climbed from the boat onto the island sand and listened. The trees were still, but something moved far inland.",
+        memory_sentence: "Jim climbed from the boat onto the island sand and listened.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "The trees were still, but something moved far inland.",
+        recognition_correct_answer: "yes",
+        scrambled_words: ["something", "moved", "far", "inland"],
+        correct_order: "something moved far inland"
+      },
+      {
+        id: "H007",
+        topic: "A Fence",
+        text_type: "Human-written",
+        pair_id: "public_domain_pool",
+        source_title: "The Adventures of Tom Sawyer",
+        source_author: "Mark Twain",
+        source_url: "https://www.gutenberg.org/ebooks/74",
+        source_note: "Adapted from public-domain human-authored narrative prose.",
+        passage: "Tom stood before the long fence with a brush in his hand. The sunny street looked cheerful, but his work seemed endless.",
+        memory_sentence: "Tom stood before the long fence with a brush in his hand.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "Tom stood before the long fence with a brush in his hand.",
+        recognition_correct_answer: "yes",
+        scrambled_words: ["his", "work", "seemed", "endless"],
+        correct_order: "his work seemed endless"
+      },
+      {
+        id: "H008",
+        topic: "The Yellow Road",
+        text_type: "Human-written",
+        pair_id: "public_domain_pool",
+        source_title: "The Wonderful Wizard of Oz",
+        source_author: "L. Frank Baum",
+        source_url: "https://www.gutenberg.org/ebooks/55",
+        source_note: "Adapted from public-domain human-authored narrative prose.",
+        passage: "Dorothy stepped onto the yellow road and held Toto close. The strange country glittered around her, and she began to walk.",
+        memory_sentence: "Dorothy stepped onto the yellow road and held Toto close.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "Dorothy hid inside the house until night came.",
+        recognition_correct_answer: "no",
+        scrambled_words: ["she", "began", "to", "walk"],
+        correct_order: "she began to walk"
+      },
+      {
+        id: "H009",
+        topic: "The Nursery Window",
+        text_type: "Human-written",
+        pair_id: "public_domain_pool",
+        source_title: "Peter Pan",
+        source_author: "J. M. Barrie",
+        source_url: "https://www.gutenberg.org/ebooks/16",
+        source_note: "Adapted from public-domain human-authored narrative prose.",
+        passage: "Wendy heard a sound near the nursery window and turned quickly. The night outside was dark, but a small figure waited.",
+        memory_sentence: "Wendy heard a sound near the nursery window and turned quickly.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "Wendy heard a sound near the nursery window and turned quickly.",
+        recognition_correct_answer: "yes",
+        scrambled_words: ["a", "small", "figure", "waited"],
+        correct_order: "a small figure waited"
+      },
+      {
+        id: "H010",
+        topic: "A Pony's Stall",
+        text_type: "Human-written",
+        pair_id: "public_domain_pool",
+        source_title: "Black Beauty",
+        source_author: "Anna Sewell",
+        source_url: "https://www.gutenberg.org/ebooks/271",
+        source_note: "Adapted from public-domain human-authored narrative prose.",
+        passage: "The young horse stood quietly in the stall while the groom spoke softly. Outside, the yard smelled of hay and rain.",
+        memory_sentence: "The young horse stood quietly in the stall while the groom spoke softly.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "The young horse ran alone through a snowy field.",
+        recognition_correct_answer: "no",
+        scrambled_words: ["the", "yard", "smelled", "of", "hay"],
+        correct_order: "the yard smelled of hay"
+      },
+      {
+        id: "H011",
+        topic: "A Mountain Path",
+        text_type: "Human-written",
+        pair_id: "public_domain_pool",
+        source_title: "Heidi",
+        source_author: "Johanna Spyri",
+        source_url: "https://www.gutenberg.org/ebooks/1448",
+        source_note: "Adapted from public-domain human-authored narrative prose.",
+        passage: "Heidi climbed the mountain path beside her aunt and watched the goats above them. The air smelled fresh, sharp, and sweet.",
+        memory_sentence: "Heidi climbed the mountain path beside her aunt and watched the goats above them.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "Heidi climbed the mountain path beside her aunt and watched the goats above them.",
+        recognition_correct_answer: "yes",
+        scrambled_words: ["the", "air", "smelled", "fresh"],
+        correct_order: "the air smelled fresh"
+      },
+      {
+        id: "H012",
+        topic: "A Wooden Boy",
+        text_type: "Human-written",
+        pair_id: "public_domain_pool",
+        source_title: "The Adventures of Pinocchio",
+        source_author: "Carlo Collodi",
+        source_url: "https://www.gutenberg.org/ebooks/500",
+        source_note: "Adapted from public-domain human-authored narrative prose.",
+        passage: "Pinocchio ran down the road with his wooden feet tapping loudly. He forgot the warning and looked only at the town.",
+        memory_sentence: "Pinocchio ran down the road with his wooden feet tapping loudly.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "Pinocchio stayed beside the fire and read quietly.",
+        recognition_correct_answer: "no",
+        scrambled_words: ["his", "wooden", "feet", "tapped", "loudly"],
+        correct_order: "his wooden feet tapped loudly"
+      },
+      {
+        id: "H013",
+        topic: "A Train Platform",
+        text_type: "Human-written",
+        pair_id: "public_domain_pool",
+        source_title: "The Railway Children",
+        source_author: "E. Nesbit",
+        source_url: "https://www.gutenberg.org/ebooks/1874",
+        source_note: "Adapted from public-domain human-authored narrative prose.",
+        passage: "The children waited near the railway line and waved as the train rushed past. Smoke curled over the field behind them.",
+        memory_sentence: "The children waited near the railway line and waved as the train rushed past.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_correct_answer: "yes",
+        recognition_sentence: "The children waited near the railway line and waved as the train rushed past.",
+        scrambled_words: ["smoke", "curled", "over", "the", "field"],
+        correct_order: "smoke curled over the field"
+      },
+      {
+        id: "H014",
+        topic: "A Wild Dog",
+        text_type: "Human-written",
+        pair_id: "public_domain_pool",
+        source_title: "The Call of the Wild",
+        source_author: "Jack London",
+        source_url: "https://www.gutenberg.org/ebooks/215",
+        source_note: "Adapted from public-domain human-authored narrative prose.",
+        passage: "Buck heard the men calling and lifted his head from the snow. The forest was silent, and the trail went on.",
+        memory_sentence: "Buck heard the men calling and lifted his head from the snow.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "Buck heard the men calling and lifted his head from the snow.",
+        recognition_correct_answer: "yes",
+        scrambled_words: ["the", "trail", "went", "on"],
+        correct_order: "the trail went on"
+      },
+      {
+        id: "H015",
+        topic: "A Sea Voyage",
+        text_type: "Human-written",
+        pair_id: "public_domain_pool",
+        source_title: "The Swiss Family Robinson",
+        source_author: "Johann David Wyss",
+        source_url: "https://www.gutenberg.org/ebooks/3836",
+        source_note: "Adapted from public-domain human-authored narrative prose.",
+        passage: "The family climbed from the broken ship and looked toward the strange shore. Their boxes were wet, but everyone was alive.",
+        memory_sentence: "The family climbed from the broken ship and looked toward the strange shore.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "Their boxes were wet, but everyone was alive.",
+        recognition_correct_answer: "yes",
+        scrambled_words: ["everyone", "was", "alive"],
+        correct_order: "everyone was alive"
+      },
+      {
+        id: "H016",
+        topic: "An Old House",
+        text_type: "Human-written",
+        pair_id: "public_domain_pool",
+        source_title: "The Old Curiosity Shop",
+        source_author: "Charles Dickens",
+        source_url: "https://www.gutenberg.org/ebooks/700",
+        source_note: "Adapted from public-domain human-authored narrative prose.",
+        passage: "Nell crossed the dark shop and touched the dusty counter. The old house creaked softly, as if it were listening.",
+        memory_sentence: "Nell crossed the dark shop and touched the dusty counter.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "Nell crossed the dark shop and touched the dusty counter.",
+        recognition_correct_answer: "yes",
+        scrambled_words: ["the", "old", "house", "creaked", "softly"],
+        correct_order: "the old house creaked softly"
+      },
+      {
+        id: "H017",
+        topic: "A Village Visit",
+        text_type: "Human-written",
+        pair_id: "public_domain_pool",
+        source_title: "Pride and Prejudice",
+        source_author: "Jane Austen",
+        source_url: "https://www.gutenberg.org/ebooks/1342",
+        source_note: "Adapted from public-domain human-authored narrative prose.",
+        passage: "Elizabeth walked quickly along the lane, holding her dress above the mud. The house appeared beyond the trees at last.",
+        memory_sentence: "Elizabeth walked quickly along the lane, holding her dress above the mud.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "Elizabeth rode slowly across a frozen lake.",
+        recognition_correct_answer: "no",
+        scrambled_words: ["the", "house", "appeared", "at", "last"],
+        correct_order: "the house appeared at last"
+      },
+      {
+        id: "H018",
+        topic: "A Lion's Paw",
+        text_type: "Human-written",
+        pair_id: "public_domain_pool",
+        source_title: "Aesop's Fables",
+        source_author: "Aesop",
+        source_url: "https://www.gutenberg.org/ebooks/11339",
+        source_note: "Adapted from public-domain human-authored fable narrative.",
+        passage: "The mouse ran over the sleeping lion and woke him. Later, it gnawed the ropes and set the great animal free.",
+        memory_sentence: "The mouse ran over the sleeping lion and woke him.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "Later, it gnawed the ropes and set the great animal free.",
+        recognition_correct_answer: "yes",
+        scrambled_words: ["the", "great", "animal", "free"],
+        correct_order: "the great animal free"
+      },
+      {
+        id: "H019",
+        topic: "A Looking Glass",
+        text_type: "Human-written",
+        pair_id: "public_domain_pool",
+        source_title: "Through the Looking-Glass",
+        source_author: "Lewis Carroll",
+        source_url: "https://www.gutenberg.org/ebooks/12",
+        source_note: "Adapted from public-domain human-authored narrative prose.",
+        passage: "Alice touched the glass and found that it was soft like mist. In a moment, she was standing in another room.",
+        memory_sentence: "Alice touched the glass and found that it was soft like mist.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "Alice touched the glass and found that it was soft like mist.",
+        recognition_correct_answer: "yes",
+        scrambled_words: ["standing", "in", "another", "room"],
+        correct_order: "standing in another room"
+      },
+      {
+        id: "H020",
+        topic: "A Country Lane",
+        text_type: "Human-written",
+        pair_id: "public_domain_pool",
+        source_title: "Emma",
+        source_author: "Jane Austen",
+        source_url: "https://www.gutenberg.org/ebooks/158",
+        source_note: "Adapted from public-domain human-authored narrative prose.",
+        passage: "Emma paused at the gate and watched the carriage turn into the lane. The afternoon was mild, and visitors were expected.",
+        memory_sentence: "Emma paused at the gate and watched the carriage turn into the lane.",
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: "The afternoon was mild, and visitors were expected.",
+        recognition_correct_answer: "yes",
+        scrambled_words: ["visitors", "were", "expected"],
+        correct_order: "visitors were expected"
       }
     ];
+
+    let DEMO_PASSAGE_POOL = PASSAGES;
 
     const CUE_ITEMS = [
       ["fluency_rating", "This text is fluent."],
@@ -795,6 +1132,7 @@
 
     const state = {
       participant: {},
+      submissionId: "",
       trials: [],
       currentIndex: -1,
       current: null,
@@ -901,10 +1239,15 @@
         .trim();
     }
 
+    function makeClientId(prefix = "participant") {
+      return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    }
+
     function saveDraft() {
       const payload = {
         saved_at: new Date().toISOString(),
         participant: state.participant,
+        submissionId: state.submissionId,
         currentIndex: state.currentIndex,
         currentData: state.currentData,
         results: state.results
@@ -940,6 +1283,25 @@
       }[textType] || textType;
     }
 
+    async function loadStimulusPool() {
+      const endpoints = ["/api/stimulus-pool", "stimuli/stimulus-pool.json"];
+      for (const endpoint of endpoints) {
+        try {
+          const response = await fetch(endpoint, { cache: "no-store" });
+          if (!response.ok) continue;
+          const data = await response.json();
+          if (Array.isArray(data.passages) && data.passages.length) {
+            DEMO_PASSAGE_POOL = data.passages;
+            return data;
+          }
+        } catch {
+          // The built-in passage pool keeps the demo usable when opened as a plain file.
+        }
+      }
+      DEMO_PASSAGE_POOL = PASSAGES;
+      return { passages: PASSAGES, locked: false };
+    }
+
     function showReady(callback) {
       state.activeStage = "ready";
       state.readyCallback = callback;
@@ -954,10 +1316,10 @@
 
     // Background data are copied into every trial row so the exported CSV is self-contained.
     function collectParticipant() {
+      state.submissionId = makeClientId("demo");
       state.participant = {
-        participant_id: $("#participantId").value.trim() || "anonymous",
-        grade: $("#grade").value.trim(),
-        native_language: $("#nativeLanguage").value.trim(),
+        participant_id: state.submissionId,
+        grade: $("#grade").value,
         years_english_learning: $("#yearsEnglish").value,
         english_reading_proficiency: $("#englishProficiency").value,
         chinese_proficiency: $("#chineseProficiency").value,
@@ -968,8 +1330,9 @@
     }
 
     // Trial order is randomized once per participant at the start of the experiment.
-    function startExperiment() {
-      state.trials = shuffle(PASSAGES);
+    async function startExperiment() {
+      await loadStimulusPool();
+      state.trials = shuffle(DEMO_PASSAGE_POOL).slice(0, 1);
       state.currentIndex = -1;
       state.results = [];
       saveDraft();
@@ -987,13 +1350,23 @@
       state.current = state.trials[state.currentIndex];
       state.currentData = {
         timestamp: new Date().toISOString(),
+        client_submission_id: state.submissionId,
         ...state.participant,
         trial_number: state.currentIndex + 1,
         text_id: state.current.id,
         text_type: state.current.text_type,
         condition: conditionCode(state.current.text_type),
         pair_id: state.current.pair_id || "",
+        base_text_id: state.current.base_text_id || state.current.id,
         topic: state.current.topic,
+        source_title: state.current.source_title || "",
+        source_author: state.current.source_author || "",
+        source_url: state.current.source_url || "",
+        source_note: state.current.source_note || "",
+        generation_model: state.current.generation_model || "",
+        generation_temperature: state.current.generation_temperature || "",
+        generation_prompt_version: state.current.generation_prompt_version || "",
+        generation_api_base_url: state.current.generation_api_base_url || "",
         reading_time_ms: "",
         authorship_judgment: "",
         authorship_response_key: "",
@@ -1126,14 +1499,44 @@
     function setupMemory() {
       makeKeyOptions(RECOGNITION_KEYS, $("#recognitionOptions"));
       $("#recognitionSentence").textContent = state.current.recognition_sentence;
-      $("#scrambledWords").innerHTML = state.current.scrambled_words.map(word => `<span class="chip">${word}</span>`).join("");
-      $("#reconstructionInput").value = "";
+      setupReconstructionBuilder(false);
       $("#memoryError").textContent = "";
-      $("#reconstructionInput").disabled = true;
       state.recognitionStart = performance.now();
       state.reconstructionStart = performance.now();
       state.activeStage = "memoryRecognition";
       showScreen(els.memory, "Trial");
+    }
+
+    function setupReconstructionBuilder(enabled) {
+      const source = $("#scrambledWords");
+      const answer = $("#reconstructionAnswer");
+      answer.innerHTML = "";
+      source.innerHTML = state.current.scrambled_words.map((word, index) => `
+        <button class="chip word-chip" type="button" data-word-index="${index}" ${enabled ? "" : "disabled"}>${word}</button>
+      `).join("");
+      source.querySelectorAll("[data-word-index]").forEach(button => {
+        button.addEventListener("click", () => {
+          if (state.activeStage !== "reconstruction" || button.disabled) return;
+          button.disabled = true;
+          const selected = document.createElement("button");
+          selected.type = "button";
+          selected.className = "chip answer-chip";
+          selected.dataset.wordIndex = button.dataset.wordIndex;
+          selected.textContent = button.textContent;
+          selected.addEventListener("click", () => {
+            button.disabled = false;
+            selected.remove();
+          });
+          answer.appendChild(selected);
+        });
+      });
+    }
+
+    function selectedReconstructionText() {
+      return Array.from($("#reconstructionAnswer").querySelectorAll("[data-word-index]"))
+        .map(node => node.textContent)
+        .join(" ")
+        .trim();
     }
 
     function recordRecognition(key) {
@@ -1145,8 +1548,7 @@
       state.currentData.recognition_correct = option.value.toLowerCase() === state.current.recognition_correct_answer ? 1 : 0;
       state.currentData.recognition_rt_ms = Math.round(performance.now() - state.recognitionStart);
       markKeySelection($("#recognitionOptions"), option.value);
-      $("#reconstructionInput").disabled = false;
-      $("#reconstructionInput").focus();
+      setupReconstructionBuilder(true);
       state.reconstructionStart = performance.now();
       state.activeStage = "reconstruction";
       saveDraft();
@@ -1154,9 +1556,9 @@
 
     function submitReconstruction() {
       if (state.activeStage !== "reconstruction") return;
-      const reconstruction = $("#reconstructionInput").value.trim();
+      const reconstruction = selectedReconstructionText();
       if (!state.currentData.recognition_answer || !reconstruction) {
-        $("#memoryError").textContent = "Please answer recognition and type the reconstruction before pressing Enter.";
+        $("#memoryError").textContent = "Please answer recognition and select words before pressing Enter.";
         return;
       }
       $("#memoryError").textContent = "";
@@ -1168,113 +1570,37 @@
       showBlankThen(nextTrial);
     }
 
-    function average(values) {
-      const numeric = values.filter(value => Number.isFinite(value));
-      return numeric.length ? numeric.reduce((sum, value) => sum + value, 0) / numeric.length : null;
-    }
-
-    // The analysis helper summarizes only the current participant's in-memory data.
     function renderEndPage() {
-      const types = [...new Set(PASSAGES.map(trial => trial.text_type))];
-      $("#analysisRows").innerHTML = types.map(type => {
-        const rows = state.results.filter(row => row.text_type === type);
-        const ai = average(rows.map(row => Number(row.ai_likelihood_rating)));
-        const rt = average(rows.map(row => Number(row.reading_time_ms)));
-        const rec = average(rows.map(row => Number(row.recognition_correct)));
-        const recon = average(rows.map(row => Number(row.reconstruction_correct)));
-        return `
-          <tr>
-            <td>${type}</td>
-            <td>${ai === null ? "--" : ai.toFixed(2)}</td>
-            <td>${rt === null ? "--" : `${Math.round(rt)} ms`}</td>
-            <td>${rec === null ? "--" : `${Math.round(rec * 100)}%`}</td>
-            <td>${recon === null ? "--" : `${Math.round(recon * 100)}%`}</td>
-          </tr>
-        `;
-      }).join("");
-
-      $("#summaryRows").innerHTML = state.results.map(row => `
-        <tr>
-          <td>${row.trial_number}</td>
-          <td>${row.text_id}</td>
-          <td>${row.text_type}</td>
-          <td>${row.authorship_judgment}</td>
-          <td>${row.ai_likelihood_rating}</td>
-          <td>${row.reading_time_ms} ms</td>
-          <td>${row.recognition_correct === 1 ? "Correct" : "Incorrect"}</td>
-          <td>${row.reconstruction_correct === 1 ? "Correct" : "Incorrect"}</td>
-        </tr>
-      `).join("");
-
       showScreen(els.end, "Complete");
+      submitDemoResultsToServer();
     }
 
-    function toCsvValue(value) {
-      return `"${String(value ?? "").replaceAll('"', '""')}"`;
-    }
+    async function submitDemoResultsToServer() {
+      const status = $("#serverSubmitStatus");
+      if (!state.results.length) {
+        status.textContent = "No demo rows were generated for submission.";
+        return;
+      }
 
-    // Export all trial-level responses as a CSV for classroom analysis.
-    function downloadCsv() {
-      const columns = [
-        "timestamp",
-        "participant_id",
-        "trial_number",
-        "condition",
-        "response",
-        "rt_ms",
-        "accuracy",
-        "grade",
-        "native_language",
-        "years_english_learning",
-        "english_reading_proficiency",
-        "chinese_proficiency",
-        "english_reading_frequency",
-        "ai_use_frequency",
-        "ai_writing_familiarity",
-        "text_id",
-        "text_type",
-        "pair_id",
-        "topic",
-        "reading_time_ms",
-        "authorship_judgment",
-        "authorship_response_key",
-        "authorship_rt_ms",
-        "authorship_correct",
-        "ai_likelihood_rating",
-        "fluency_rating",
-        "structure_rating",
-        "clarity_rating",
-        "emotion_rating",
-        "personal_voice_rating",
-        "genericness_rating",
-        "naturalness_rating",
-        "distractor_type",
-        "distractor_prompt",
-        "distractor_answer",
-        "distractor_response_key",
-        "distractor_correct",
-        "distractor_rt_ms",
-        "recognition_sentence",
-        "recognition_answer",
-        "recognition_response_key",
-        "recognition_correct",
-        "recognition_rt_ms",
-        "scrambled_words",
-        "reconstruction_response",
-        "reconstruction_correct",
-        "reconstruction_rt_ms"
-      ];
-      const csv = [
-        columns.join(","),
-        ...state.results.map(row => columns.map(column => toCsvValue(row[column])).join(","))
-      ].join("\n");
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `psycholinguistics-ai-authorship-demo-${state.participant.participant_id || "anonymous"}.csv`;
-      link.click();
-      URL.revokeObjectURL(url);
+      try {
+        const response = await fetch("/api/submit-demo-results", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            submission_id: state.submissionId,
+            participant_id: state.participant.participant_id,
+            rows: state.results
+          })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Demo submission failed.");
+        status.textContent = data.duplicate
+          ? "Demo results were already synchronized."
+          : "Demo results synchronized successfully.";
+        clearDraft();
+      } catch (error) {
+        status.textContent = `Demo synchronization failed: ${error.message}. Please tell the researcher.`;
+      }
     }
 
     $("#startBtn").addEventListener("click", () => showScreen(els.background, "Background"));
@@ -1327,26 +1653,7 @@
     });
 
     $("#memoryNextBtn").addEventListener("click", () => {
-      $("#memoryError").textContent = "Use F/J for recognition, then press Enter after typing the reconstruction.";
-    });
-
-    $("#downloadCsvBtn").addEventListener("click", downloadCsv);
-    $("#restartBtn").addEventListener("click", () => {
-      state.participant = {};
-      state.trials = [];
-      state.currentIndex = -1;
-      state.current = null;
-      state.currentData = null;
-      state.results = [];
-      document.querySelectorAll("input, textarea").forEach(input => {
-        if (input.type === "radio") input.checked = false;
-        else input.value = "";
-      });
-      document.querySelectorAll("select").forEach(select => {
-        select.value = "";
-      });
-      clearDraft();
-      showScreen(els.welcome, "Welcome");
+      $("#memoryError").textContent = "Use F/J for recognition, select the words, then press Enter.";
     });
 
     window.addEventListener("keydown", event => {

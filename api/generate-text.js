@@ -21,8 +21,14 @@ function clampNumber(value, fallback, min, max) {
 function buildPrompt(config) {
   const candidates = clampNumber(config.candidates, 3, 1, 5);
   const temperature = clampNumber(config.temperature, 0.2, 0, 1);
-  const targetWords = clampNumber(config.targetWords, 85, 60, 130);
+  const targetWords = clampNumber(config.targetWords, 85, 20, 130);
   const systemInstruction = String(config.systemInstruction || DEFAULT_SYSTEM_INSTRUCTION).trim().slice(0, 2000) || DEFAULT_SYSTEM_INSTRUCTION;
+  const condition = config.condition || "AI-generated";
+  const conditionInstruction = {
+    "AI-generated": "Write a new narrative passage on the same topic. Match the reference length and difficulty, but do not copy its wording or named details too closely.",
+    "Human-AI hybrid": "Create a lightly AI-edited hybrid version of the human reference. Preserve the same small event and key concrete details, but smooth wording, order, and phrasing enough that the text plausibly reflects AI assistance.",
+    "Human-written": "Rewrite only if needed as a human-like narrative control. Keep the passage natural and concrete."
+  }[condition] || "Generate a matched narrative passage.";
 
   return {
     candidates,
@@ -35,10 +41,11 @@ function buildPrompt(config) {
       "",
       "STIMULUS CONFIGURATION:",
       `- Number of candidate passages: ${candidates}`,
-      `- Target condition: ${config.condition || "AI-generated"}`,
+      `- Target condition: ${condition}`,
       `- Genre: narrative only; do not write argumentative or expository prose.`,
       `- Topic: ${config.topic || "After Class"}`,
       `- Target length: about ${targetWords} words per passage.`,
+      `- Condition-specific instruction: ${conditionInstruction}`,
       "- Style: simple student-readable English, CEFR B1-B2, concrete events, short sentences.",
       "- Match the human reference in length, difficulty, concreteness, and narrative point of view.",
       "- Avoid explicit references to AI, authorship, writing tools, experiments, memory tests, or generated text.",

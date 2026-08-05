@@ -353,6 +353,7 @@
     <nav aria-label="Admin sections">
       <a href="#parameters">Parameters</a>
       <a href="#generation">AI generation</a>
+      <a href="#stimulusPool">Stimulus pool</a>
       <a href="#corpus">Corpus</a>
       <a href="#publish">Publish</a>
       <a href="#data">Data</a>
@@ -488,6 +489,39 @@
         <div class="grid" id="candidateList"></div>
       </section>
 
+      <section id="stimulusPool">
+        <div>
+          <h2>Matched Stimulus Pool</h2>
+          <p class="muted">Generate and lock the formal Human / AI / Hybrid stimulus set from the 20 fixed human base passages. Participant pages read this fixed pool.</p>
+        </div>
+        <div class="card-grid">
+          <div class="card"><span class="muted">Human base texts</span><strong id="basePassageCount">0</strong></div>
+          <div class="card"><span class="muted">Human variants</span><strong id="humanVariantCount">0</strong></div>
+          <div class="card"><span class="muted">AI variants</span><strong id="aiVariantCount">0</strong></div>
+          <div class="card"><span class="muted">Hybrid variants</span><strong id="hybridVariantCount">0</strong></div>
+        </div>
+        <div class="button-row">
+          <button id="loadStimulusPoolBtn">Refresh Stimulus Pool</button>
+          <button id="generateMatchedPoolBtn">Generate + Lock 20 Matched Sets</button>
+          <button class="secondary" id="exportStimulusPoolBtn">Export Stimulus Pool JSON</button>
+          <span class="status" id="stimulusPoolStatus"></span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Base ID</th>
+                <th>Human</th>
+                <th>AI</th>
+                <th>Hybrid</th>
+                <th>Topic</th>
+              </tr>
+            </thead>
+            <tbody id="stimulusPoolRows"></tbody>
+          </table>
+        </div>
+      </section>
+
       <section id="corpus">
         <div>
           <h2>Corpus Management</h2>
@@ -601,6 +635,24 @@
           <button class="danger" id="clearDataBtn">Clear Imported Data</button>
           <span class="status" id="dataStatus"></span>
         </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Participant</th>
+                <th>Trial</th>
+                <th>Actual type</th>
+                <th>Judgment</th>
+                <th>Judgment RT</th>
+                <th>Reading time</th>
+                <th>Filler answer / RT</th>
+                <th>Recognition answer / RT</th>
+                <th>Reconstruction answer / RT</th>
+              </tr>
+            </thead>
+            <tbody id="trialDataRows"></tbody>
+          </table>
+        </div>
       </section>
 
       <section id="monitor">
@@ -671,7 +723,10 @@
     const state = {
       corpus: readJson(STORAGE_KEYS.corpus, defaultCorpus),
       importedRows: readJson(STORAGE_KEYS.data, []),
-      generatedCandidates: []
+      serverRows: [],
+      generatedCandidates: [],
+      humanPassages: [],
+      stimulusPool: []
     };
 
     const $ = selector => document.querySelector(selector);
@@ -688,6 +743,7 @@
           "#researcherPill": "Researcher view only",
           "nav a[href='#parameters']": "Parameters",
           "nav a[href='#generation']": "AI generation",
+          "nav a[href='#stimulusPool']": "Stimulus pool",
           "nav a[href='#corpus']": "Corpus",
           "nav a[href='#publish']": "Publish",
           "nav a[href='#data']": "Data",
@@ -718,6 +774,15 @@
           "#generation label:nth-of-type(10) span": "Structured prompt preview",
           "#generateBtn": "Generate 3 Candidates",
           "#refreshPromptBtn": "Refresh Prompt Preview",
+          "#stimulusPool h2": "Matched Stimulus Pool",
+          "#stimulusPool .muted": "Generate and lock the formal Human / AI / Hybrid stimulus set from the 20 fixed human base passages. Participant pages read this fixed pool.",
+          "#stimulusPool .card:nth-of-type(1) .muted": "Human base texts",
+          "#stimulusPool .card:nth-of-type(2) .muted": "Human variants",
+          "#stimulusPool .card:nth-of-type(3) .muted": "AI variants",
+          "#stimulusPool .card:nth-of-type(4) .muted": "Hybrid variants",
+          "#loadStimulusPoolBtn": "Refresh Stimulus Pool",
+          "#generateMatchedPoolBtn": "Generate + Lock 20 Matched Sets",
+          "#exportStimulusPoolBtn": "Export Stimulus Pool JSON",
           "#corpus h2": "Corpus Management",
           "#corpus .muted": "Paste human-written text, store AI-generated candidates, or manually create Hybrid passages. Labels are for the researcher only.",
           "#corpus label:nth-of-type(1) span": "Text ID",
@@ -784,7 +849,9 @@
           "#corpusCondition option[value='Human-AI hybrid']": "Human-AI hybrid"
         },
         tables: {
+          stimulusPool: ["Base ID", "Human", "AI", "Hybrid", "Topic"],
           corpus: ["ID", "Condition", "Topic", "Genre", "Words", "Difficulty", "Preview"],
+          trialData: ["Participant ID", "Trial", "Actual type", "Judgment", "Judgment RT", "Reading time", "Filler answer / RT", "Recognition answer / RT", "Reconstruction answer / RT"],
           monitor: ["Condition", "Rows", "Mean RT", "Mean accuracy"]
         },
         messages: {
@@ -796,6 +863,10 @@
           reconstruction: "Reconstruction",
           saveToCorpus: "Save to Corpus",
           savedToCorpus: "Saved {id} to corpus.",
+          stimulusPoolLoaded: "Loaded stimulus pool: {count} items.",
+          stimulusPoolGenerating: "Generating {condition} for {id} ({index}/{total})...",
+          stimulusPoolLocked: "Stimulus pool locked: {count} items saved.",
+          stimulusPoolUnavailable: "Stimulus pool unavailable: {message}",
           passageRequired: "Passage is required.",
           savedItem: "Saved {id}.",
           configSaved: "Configuration saved locally.",
@@ -819,6 +890,7 @@
           "#researcherPill": "仅研究者可见",
           "nav a[href='#parameters']": "实验参数",
           "nav a[href='#generation']": "AI 生成",
+          "nav a[href='#stimulusPool']": "正式刺激池",
           "nav a[href='#corpus']": "语料库",
           "nav a[href='#publish']": "发布",
           "nav a[href='#data']": "数据",
@@ -849,6 +921,15 @@
           "#generation label:nth-of-type(10) span": "结构化提示词预览",
           "#generateBtn": "生成 3 篇候选",
           "#refreshPromptBtn": "刷新提示词预览",
+          "#stimulusPool h2": "配对正式刺激池",
+          "#stimulusPool .muted": "从固定的 20 段人类 base 文本生成并锁定正式 Human / AI / Hybrid 材料。被试端会读取这个固定刺激池。",
+          "#stimulusPool .card:nth-of-type(1) .muted": "Human base 文本",
+          "#stimulusPool .card:nth-of-type(2) .muted": "Human 版本",
+          "#stimulusPool .card:nth-of-type(3) .muted": "AI 版本",
+          "#stimulusPool .card:nth-of-type(4) .muted": "Hybrid 版本",
+          "#loadStimulusPoolBtn": "刷新刺激池",
+          "#generateMatchedPoolBtn": "生成并锁定 20 组配对材料",
+          "#exportStimulusPoolBtn": "导出刺激池 JSON",
           "#corpus h2": "语料库管理",
           "#corpus .muted": "粘贴人工文本、保存 AI 候选文本，或手动拼接 Hybrid 文本。标签只给研究者查看。",
           "#corpus label:nth-of-type(1) span": "文本 ID",
@@ -915,7 +996,9 @@
           "#corpusCondition option[value='Human-AI hybrid']": "Human-AI hybrid（人机混合）"
         },
         tables: {
+          stimulusPool: ["Base ID", "Human", "AI", "Hybrid", "题材"],
           corpus: ["ID", "条件", "题材", "体裁", "词数", "难度", "预览"],
+          trialData: ["被试编号", "试次", "真实类型", "来源判断", "判断 RT", "阅读时间", "填充题答案 / RT", "再认答案 / RT", "重组答案 / RT"],
           monitor: ["条件", "行数", "平均 RT", "平均正确率"]
         },
         messages: {
@@ -927,6 +1010,10 @@
           reconstruction: "重组答案",
           saveToCorpus: "保存到语料库",
           savedToCorpus: "已将 {id} 保存到语料库。",
+          stimulusPoolLoaded: "已加载刺激池：{count} 条材料。",
+          stimulusPoolGenerating: "正在生成 {condition}：{id}（{index}/{total}）...",
+          stimulusPoolLocked: "刺激池已锁定：已保存 {count} 条材料。",
+          stimulusPoolUnavailable: "刺激池不可用：{message}",
           passageRequired: "必须填写文本内容。",
           savedItem: "已保存 {id}。",
           configSaved: "配置已保存到本地浏览器。",
@@ -969,6 +1056,12 @@
       applyTextMap(dict.options, (node, value) => { node.textContent = value; });
       document.querySelectorAll("#corpus th").forEach((th, index) => {
         th.textContent = dict.tables.corpus[index] || th.textContent;
+      });
+      document.querySelectorAll("#stimulusPool th").forEach((th, index) => {
+        th.textContent = dict.tables.stimulusPool[index] || th.textContent;
+      });
+      document.querySelectorAll("#data th").forEach((th, index) => {
+        th.textContent = dict.tables.trialData[index] || th.textContent;
       });
       document.querySelectorAll("#monitor th").forEach((th, index) => {
         th.textContent = dict.tables.monitor[index] || th.textContent;
@@ -1099,6 +1192,246 @@
           $("#generationStatus").textContent = t("savedToCorpus", { id });
         });
       });
+    }
+
+    function baseTextId(item) {
+      return item.base_text_id || item.human_base_id || item.id.replace(/^(AI|HY)-?/, "H");
+    }
+
+    function generationSettings() {
+      return {
+        endpoint: $("#apiEndpoint").value.trim() || "/api/generate-text",
+        model: $("#model").value.trim() || "gpt-4o-mini",
+        apiBaseUrl: $("#apiBaseUrl").value.trim() || "https://api.chatanywhere.tech/v1",
+        systemInstruction: $("#systemInstruction").value.trim(),
+        temperature: Number($("#temperature").value || 0.2)
+      };
+    }
+
+    async function loadHumanPassages() {
+      const endpoints = ["/api/human-passages", "stimuli/human-passages.json"];
+      for (const endpoint of endpoints) {
+        try {
+          const response = await fetch(endpoint, { cache: "no-store" });
+          if (!response.ok) continue;
+          const data = await response.json();
+          if (Array.isArray(data.passages) && data.passages.length) {
+            state.humanPassages = data.passages;
+            return state.humanPassages;
+          }
+        } catch {
+          // Try the next endpoint; static hosting may not provide the API route.
+        }
+      }
+      throw new Error("Could not load human-passages.json.");
+    }
+
+    async function loadStimulusPool() {
+      await loadHumanPassages();
+      const endpoints = ["/api/stimulus-pool", "stimuli/stimulus-pool.json"];
+      for (const endpoint of endpoints) {
+        try {
+          const response = await fetch(endpoint, { cache: "no-store" });
+          if (!response.ok) continue;
+          const data = await response.json();
+          if (Array.isArray(data.passages)) {
+            state.stimulusPool = data.passages;
+            renderStimulusPool();
+            $("#stimulusPoolStatus").className = "status";
+            $("#stimulusPoolStatus").textContent = t("stimulusPoolLoaded", { count: state.stimulusPool.length });
+            return data;
+          }
+        } catch {
+          // Fall through to an empty pool view.
+        }
+      }
+      state.stimulusPool = [];
+      renderStimulusPool();
+      throw new Error("Could not load stimulus-pool.json.");
+    }
+
+    function firstSentence(text) {
+      return String(text || "").match(/[^.!?]+[.!?]/)?.[0]?.trim() || String(text || "").trim();
+    }
+
+    function reconstructionFromText(text) {
+      const words = String(text || "")
+        .replace(/[.,!?;:'"“”‘’]/g, "")
+        .split(/\s+/)
+        .filter(word => word.length > 1)
+        .slice(0, 5);
+      return {
+        correct_order: words.join(" "),
+        scrambled_words: words.length ? words.sort(() => Math.random() - 0.5) : []
+      };
+    }
+
+    function normalizeGeneratedVariant(human, candidate, condition, metadata) {
+      const passage = String(candidate.passage || "").trim();
+      const recognitionSentence = String(candidate.recognition_sentence || firstSentence(passage)).trim();
+      const reconstruction = reconstructionFromText(candidate.correct_order || recognitionSentence || passage);
+      const prefix = condition === "AI-generated" ? "AI" : "HY";
+      return {
+        id: `${prefix}-${human.id}`,
+        base_text_id: human.id,
+        topic: human.topic,
+        text_type: condition,
+        pair_id: human.id,
+        source_title: condition === "AI-generated" ? "API-generated matched narrative" : "API-assisted hybrid narrative",
+        source_author: metadata.model || "OpenAI-compatible API",
+        source_url: "",
+        source_note: [
+          `Generated from human base ${human.id}.`,
+          `model=${metadata.model || ""}`,
+          `temperature=${metadata.temperature ?? ""}`,
+          `api_base_url=${metadata.api_base_url || ""}`,
+          "prompt_version=matched-short-narrative-v1"
+        ].filter(Boolean).join(" "),
+        generation_model: metadata.model || "",
+        generation_temperature: metadata.temperature ?? "",
+        generation_prompt_version: "matched-short-narrative-v1",
+        generation_api_base_url: metadata.api_base_url || "",
+        passage,
+        memory_sentence: recognitionSentence,
+        recognition_question: "Did this sentence appear in the passage?",
+        recognition_sentence: recognitionSentence,
+        recognition_correct_answer: String(candidate.recognition_correct_answer || "yes").toLowerCase() === "no" ? "no" : "yes",
+        scrambled_words: Array.isArray(candidate.scrambled_words) && candidate.scrambled_words.length ? candidate.scrambled_words : reconstruction.scrambled_words,
+        correct_order: String(candidate.correct_order || reconstruction.correct_order).trim()
+      };
+    }
+
+    function normalizeHumanVariant(human) {
+      return {
+        ...human,
+        base_text_id: human.id,
+        pair_id: human.id,
+        text_type: "Human-written",
+        generation_model: "",
+        generation_temperature: "",
+        generation_prompt_version: "",
+        generation_api_base_url: ""
+      };
+    }
+
+    async function generateMatchedVariant(human, condition, index, total) {
+      const settings = generationSettings();
+      $("#stimulusPoolStatus").className = "status";
+      $("#stimulusPoolStatus").textContent = t("stimulusPoolGenerating", { condition, id: human.id, index, total });
+      const response = await fetch(settings.endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: settings.model,
+          apiBaseUrl: settings.apiBaseUrl,
+          systemInstruction: settings.systemInstruction,
+          condition,
+          topic: human.topic,
+          referencePassage: human.passage,
+          targetWords: Math.max(20, wordCount(human.passage)),
+          candidates: 1,
+          temperature: settings.temperature
+        })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || `Generation failed for ${human.id}`);
+      const candidate = data.candidates?.[0];
+      if (!candidate?.passage) throw new Error(`No candidate passage returned for ${human.id}`);
+      return normalizeGeneratedVariant(human, candidate, condition, data);
+    }
+
+    async function saveStimulusPool(passages, generation) {
+      const response = await fetch("/api/stimulus-pool", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          version: "matched-stimulus-pool-v1",
+          locked: true,
+          generated_at: new Date().toISOString(),
+          generation,
+          passages
+        })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Could not save stimulus pool.");
+      return data;
+    }
+
+    async function generateMatchedStimulusPool() {
+      const button = $("#generateMatchedPoolBtn");
+      button.disabled = true;
+      try {
+        const humanPassages = await loadHumanPassages();
+        const totalGenerationSteps = humanPassages.length * 2;
+        const pool = [];
+        let step = 0;
+        for (const human of humanPassages) {
+          pool.push(normalizeHumanVariant(human));
+          step += 1;
+          pool.push(await generateMatchedVariant(human, "AI-generated", step, totalGenerationSteps));
+          step += 1;
+          pool.push(await generateMatchedVariant(human, "Human-AI hybrid", step, totalGenerationSteps));
+        }
+        const settings = generationSettings();
+        const generation = {
+          model: settings.model,
+          api_base_url: settings.apiBaseUrl,
+          temperature: settings.temperature,
+          prompt_version: "matched-short-narrative-v1",
+          human_base_version: "human-public-domain-adapted-v1"
+        };
+        await saveStimulusPool(pool, generation);
+        state.stimulusPool = pool;
+        state.corpus = pool.map(item => ({
+          id: item.id,
+          condition: item.text_type,
+          topic: item.topic,
+          genre: "Narrative",
+          difficulty: "B1-B2",
+          pair_id: item.pair_id,
+          passage: item.passage
+        }));
+        saveJson(STORAGE_KEYS.corpus, state.corpus);
+        renderStimulusPool();
+        renderCorpus();
+        $("#stimulusPoolStatus").className = "status";
+        $("#stimulusPoolStatus").textContent = t("stimulusPoolLocked", { count: pool.length });
+      } catch (error) {
+        $("#stimulusPoolStatus").className = "status bad";
+        $("#stimulusPoolStatus").textContent = t("stimulusPoolUnavailable", { message: error.message });
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    function renderStimulusPool() {
+      const baseIds = new Set(state.humanPassages.map(row => row.id));
+      const byBase = new Map();
+      state.stimulusPool.forEach(item => {
+        const key = baseTextId(item);
+        if (!byBase.has(key)) byBase.set(key, {});
+        byBase.get(key)[item.text_type] = item;
+      });
+      $("#basePassageCount").textContent = baseIds.size;
+      $("#humanVariantCount").textContent = state.stimulusPool.filter(item => item.text_type === "Human-written").length;
+      $("#aiVariantCount").textContent = state.stimulusPool.filter(item => item.text_type === "AI-generated").length;
+      $("#hybridVariantCount").textContent = state.stimulusPool.filter(item => item.text_type === "Human-AI hybrid").length;
+      $("#stimulusPoolRows").innerHTML = Array.from(baseIds).map(id => {
+        const group = byBase.get(id) || {};
+        const human = group["Human-written"];
+        const ai = group["AI-generated"];
+        const hybrid = group["Human-AI hybrid"];
+        const topic = human?.topic || ai?.topic || hybrid?.topic || "";
+        return `
+          <tr>
+            <td>${escapeHtml(id)}</td>
+            <td>${human ? "yes" : "missing"}</td>
+            <td>${ai ? "yes" : "missing"}</td>
+            <td>${hybrid ? "yes" : "missing"}</td>
+            <td>${escapeHtml(topic)}</td>
+          </tr>
+        `;
+      }).join("");
     }
 
     function upsertCorpus(item) {
@@ -1252,11 +1585,69 @@
       }).join("");
     }
 
+    function cell(row, ...keys) {
+      for (const key of keys) {
+        if (row[key] !== undefined && row[key] !== "") return row[key];
+      }
+      return "";
+    }
+
+    function ms(value) {
+      return value ? `${escapeHtml(value)} ms` : "--";
+    }
+
+    function participantDisplay(row) {
+      const label = cell(row, "participant_label");
+      const number = cell(row, "participant_number_assigned_by_server", "participant_number");
+      const fallback = number ? `P${String(number).padStart(3, "0")}` : "";
+      const anonymous = cell(row, "anonymous_participant_id", "participant_id", "submission_id");
+      const shortId = anonymous ? String(anonymous).slice(-6) : "";
+      return `${label || fallback || "--"}${shortId ? `<br><span class="muted">${escapeHtml(shortId)}</span>` : ""}`;
+    }
+
+    function renderTrialDataRows(rows = state.serverRows) {
+      const visibleRows = rows.slice(-80).reverse();
+      $("#trialDataRows").innerHTML = visibleRows.length ? visibleRows.map(row => {
+        const trial = cell(row, "trial_number_within_participant", "trial_number");
+        const actual = cell(row, "actual_text_type", "text_type");
+        const judgment = cell(row, "participant_authorship_judgment", "authorship_judgment", "response");
+        const judgmentRt = cell(row, "authorship_rt_ms", "primary_authorship_rt_ms_duplicate", "rt_ms");
+        const reading = cell(row, "reading_page_time_ms", "reading_time_ms");
+        const filler = cell(row, "filler_answer", "distractor_answer");
+        const fillerKey = cell(row, "filler_response_key", "distractor_response_key");
+        const fillerRt = cell(row, "filler_rt_ms", "distractor_rt_ms");
+        const recognition = cell(row, "recognition_answer");
+        const recognitionKey = cell(row, "recognition_response_key");
+        const recognitionRt = cell(row, "recognition_rt_ms");
+        const reconstruction = cell(row, "reconstruction_selected_words_response", "reconstruction_response");
+        const reconstructionRt = cell(row, "reconstruction_rt_ms");
+        return `
+          <tr>
+            <td>${participantDisplay(row)}</td>
+            <td>${escapeHtml(trial)}</td>
+            <td>${escapeHtml(actual)}</td>
+            <td>${escapeHtml(judgment)}</td>
+            <td>${ms(judgmentRt)}</td>
+            <td>${ms(reading)}</td>
+            <td>${escapeHtml(filler || "--")} ${fillerKey ? `(${escapeHtml(fillerKey)})` : ""}<br>${ms(fillerRt)}</td>
+            <td>${escapeHtml(recognition || "--")} ${recognitionKey ? `(${escapeHtml(recognitionKey)})` : ""}<br>${ms(recognitionRt)}</td>
+            <td>${escapeHtml(reconstruction || "--")}<br>${ms(reconstructionRt)}</td>
+          </tr>
+        `;
+      }).join("") : `<tr><td colspan="9">No formal participant rows yet.</td></tr>`;
+    }
+
     async function refreshServerResults() {
       try {
-        const response = await fetch("/api/results");
-        const summary = await response.json();
-        if (!response.ok) throw new Error(summary.error || "Could not load server results.");
+        const [summaryResponse, rowsResponse] = await Promise.all([
+          fetch("/api/results"),
+          fetch("/api/results-rows")
+        ]);
+        const summary = await summaryResponse.json();
+        const rowData = await rowsResponse.json();
+        if (!summaryResponse.ok) throw new Error(summary.error || "Could not load server results.");
+        if (!rowsResponse.ok) throw new Error(rowData.error || "Could not load server trial rows.");
+        state.serverRows = rowData.rows || [];
         $("#participantCount").textContent = summary.participant_count || 0;
         $("#trialCount").textContent = summary.row_count || 0;
         const target = Number($("#targetN").value || 100);
@@ -1270,12 +1661,14 @@
             <td>${value.mean_accuracy === null ? "--" : `${Math.round(value.mean_accuracy * 100)}%`}</td>
           </tr>
         `).join("");
+        renderTrialDataRows();
         $("#dataStatus").className = "status";
         $("#dataStatus").textContent = t("serverLoaded");
       } catch (error) {
         $("#dataStatus").className = "status warn";
         $("#dataStatus").textContent = t("serverUnavailable", { message: error.message });
         renderMonitor();
+        renderTrialDataRows([]);
       }
     }
 
@@ -1286,6 +1679,20 @@
     });
     $("#refreshPromptBtn").addEventListener("click", buildPromptPreview);
     $("#generateBtn").addEventListener("click", generateCandidates);
+    $("#loadStimulusPoolBtn").addEventListener("click", () => {
+      loadStimulusPool().catch(error => {
+        $("#stimulusPoolStatus").className = "status bad";
+        $("#stimulusPoolStatus").textContent = t("stimulusPoolUnavailable", { message: error.message });
+      });
+    });
+    $("#generateMatchedPoolBtn").addEventListener("click", generateMatchedStimulusPool);
+    $("#exportStimulusPoolBtn").addEventListener("click", () => {
+      downloadText("matched-stimulus-pool.json", JSON.stringify({
+        version: "matched-stimulus-pool-v1",
+        exported_at: new Date().toISOString(),
+        passages: state.stimulusPool
+      }, null, 2), "application/json;charset=utf-8");
+    });
     $("#saveCorpusBtn").addEventListener("click", saveCorpusFromForm);
     $("#exportCorpusBtn").addEventListener("click", () => {
       downloadText("experiment-corpus.json", JSON.stringify(state.corpus, null, 2), "application/json;charset=utf-8");
@@ -1332,6 +1739,7 @@
       localize(event.target.value);
       buildPromptPreview();
       renderCandidates(state.generatedCandidates);
+      renderStimulusPool();
       renderMonitor();
     });
 
@@ -1339,6 +1747,11 @@
     renderLinks();
     buildPromptPreview();
     renderCorpus();
+    loadStimulusPool().catch(error => {
+      $("#stimulusPoolStatus").className = "status warn";
+      $("#stimulusPoolStatus").textContent = t("stimulusPoolUnavailable", { message: error.message });
+      renderStimulusPool();
+    });
     refreshServerResults();
   </script>
 </body>

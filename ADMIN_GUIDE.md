@@ -26,31 +26,41 @@
 
 ### 3. 语料库管理
 
+### 3. 正式配对刺激池
+
+- `Matched Stimulus Pool` 会读取固定的 20 段 Human base passages。
+- 点击 `Generate + Lock 20 Matched Sets` 后，后台会为每个 base passage 生成 1 个 AI-generated 版本和 1 个 Human-AI hybrid 版本。
+- 生成完成后，服务器会保存 `stimuli/stimulus-pool.json`，共 60 条正式刺激：20 Human、20 AI、20 Hybrid。
+- 正式被试端会读取这个锁定后的刺激池，并随机抽取 9-12 个 trial；同一位被试不会看到同一个 base passage 的多个版本。
+- CSV 会记录 `text_base_id`、`text_pair_id`、真实文本类型、被试判断、生成模型、temperature 和 prompt version，方便后续分析。
+
+### 4. 语料库管理
+
 - 粘贴或保存 Human-written、AI-generated、Human-AI hybrid 文本。
 - 给每段文本记录 ID、来源条件、题材、体裁、词汇难度、配对 ID。
 - 可以手动记录 Hybrid 文本的拼接说明。
 - 可以导出语料库 JSON，方便备份或后续整理正式材料。
 
-### 4. 被试端发布控制
+### 5. 被试端发布控制
 
 - Demo link 指向 demo 被试版，只用于演示，不会写入 admin 端 master CSV。
 - Full participant link 指向正式实验版，正式完成后会自动提交到服务器 master CSV。
 - 实际收数据时，只给被试正式被试端链接，不给 admin 链接。
 
-### 5. 数据回收与导出
+### 6. 数据回收与导出
 
 - 正式实验完成后，数据会提交到服务器端 `data/master-results.csv`。
 - 可以点击刷新服务器 Master CSV 摘要。
 - 可以下载服务器 Master CSV 用于 SPSS、R、Python 或 Excel 分析。
 - 如果有单独下载的 CSV，也可以粘贴或上传到 admin 端合并。
 
-### 6. 进度监控
+### 7. 进度监控
 
 - 显示当前被试人数、总试次数、目标 N 和完成度。
 - 按条件汇总行数、平均反应时 RT 和平均正确率。
 - 被试编号由服务器按提交顺序生成，便于后续区分第 1 人、第 2 人等。
 
-### 7. 中英切换
+### 8. 中英切换
 
 - 页面右上角可以切换 English / 中文。
 - 语言切换只改变管理员界面显示，不改变内部数据字段。
@@ -62,6 +72,7 @@
 
 - **Parameters**: text count, genre, condition allocation, filler task, key mappings, target sample size.
 - **AI generation**: server-side OpenAI-compatible call with editable model, base URL, temperature, candidate count, system instruction, and structured prompt preview.
+- **Matched stimulus pool**: one-click generation and locking of 20 matched Human / AI / Hybrid stimulus sets, saved to `stimuli/stimulus-pool.json`.
 - **Corpus**: store human, AI, and hybrid passages with labels such as condition, topic, genre, difficulty, and pair ID.
 - **Publishing**: copy demo and full participant links. Demo data is not added to the server master CSV; full experiment data is.
 - **Data**: refresh/download server master CSV or manually merge CSV files.
