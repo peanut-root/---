@@ -13,18 +13,18 @@
       "source_url": "https://www.gutenberg.org/ebooks/113",
       "source_note": "Adapted from public-domain human-authored narrative prose.",
       "passage": "Mary found the garden door under thick ivy and pushed it open slowly. The quiet path inside looked strange, green, and secret.",
-      "memory_sentence": "Mary found the garden door under thick ivy and pushed it open slowly.",
+      "memory_sentence": "The quiet path inside looked strange, green, and secret.",
       "recognition_question": "Did this sentence appear in the passage?",
       "recognition_sentence": "Mary found the garden door under thick ivy and pushed it open slowly.",
       "recognition_correct_answer": "yes",
       "scrambled_words": [
-        "the",
-        "quiet",
-        "path",
+        "inside",
         "looked",
-        "secret"
+        "strange",
+        "green",
+        "path"
       ],
-      "correct_order": "the quiet path looked secret"
+      "correct_order": "path inside looked strange green"
     },
     {
       "id": "H002",
@@ -36,18 +36,18 @@
       "source_url": "https://www.gutenberg.org/ebooks/289",
       "source_note": "Adapted from public-domain human-authored narrative prose.",
       "passage": "Mole reached the river bank and stared at the bright water. Boats moved past him, and the whole morning seemed new.",
-      "memory_sentence": "Mole reached the river bank and stared at the bright water.",
+      "memory_sentence": "Boats moved past him, and the whole morning seemed new.",
       "recognition_question": "Did this sentence appear in the passage?",
       "recognition_sentence": "Mole reached the river bank and stared at the bright water.",
       "recognition_correct_answer": "yes",
       "scrambled_words": [
+        "him",
+        "and",
         "the",
         "whole",
-        "morning",
-        "seemed",
-        "new"
+        "past"
       ],
-      "correct_order": "the whole morning seemed new"
+      "correct_order": "past him and the whole"
     },
     {
       "id": "H003",
@@ -59,17 +59,18 @@
       "source_url": "https://www.gutenberg.org/ebooks/11",
       "source_note": "Adapted from public-domain human-authored narrative prose.",
       "passage": "Alice saw a white rabbit hurry across the grass with a watch in its paw. She followed before thinking what might happen.",
-      "memory_sentence": "Alice saw a white rabbit hurry across the grass with a watch in its paw.",
+      "memory_sentence": "She followed before thinking what might happen.",
       "recognition_question": "Did this sentence appear in the passage?",
       "recognition_sentence": "Alice saw a white rabbit hurry across the grass with a watch in its paw.",
       "recognition_correct_answer": "yes",
       "scrambled_words": [
-        "she",
-        "followed",
         "before",
-        "thinking"
+        "thinking",
+        "what",
+        "might",
+        "followed"
       ],
-      "correct_order": "she followed before thinking"
+      "correct_order": "followed before thinking what might"
     },
     {
       "id": "H004",
@@ -86,13 +87,13 @@
       "recognition_sentence": "Anne walked beside the sea and listened to the waves.",
       "recognition_correct_answer": "no",
       "scrambled_words": [
-        "the",
-        "pink",
-        "blossoms",
+        "trees",
+        "and",
         "looked",
-        "beautiful"
+        "up",
+        "orchard"
       ],
-      "correct_order": "the pink blossoms looked beautiful"
+      "correct_order": "orchard trees and looked up"
     },
     {
       "id": "H005",
@@ -104,17 +105,18 @@
       "source_url": "https://www.gutenberg.org/ebooks/514",
       "source_note": "Adapted from public-domain human-authored narrative prose.",
       "passage": "The four sisters sat near the fire while snow pressed against the windows. Their small room felt warm, busy, and safe.",
-      "memory_sentence": "The four sisters sat near the fire while snow pressed against the windows.",
+      "memory_sentence": "Their small room felt warm, busy, and safe.",
       "recognition_question": "Did this sentence appear in the passage?",
       "recognition_sentence": "The four sisters sat near the fire while snow pressed against the windows.",
       "recognition_correct_answer": "yes",
       "scrambled_words": [
-        "the",
         "room",
         "felt",
-        "warm"
+        "warm",
+        "busy",
+        "small"
       ],
-      "correct_order": "the room felt warm"
+      "correct_order": "small room felt warm busy"
     },
     {
       "id": "H006",
@@ -131,12 +133,13 @@
       "recognition_sentence": "The trees were still, but something moved far inland.",
       "recognition_correct_answer": "yes",
       "scrambled_words": [
-        "something",
-        "moved",
-        "far",
-        "inland"
+        "boat",
+        "onto",
+        "the",
+        "island",
+        "the"
       ],
-      "correct_order": "something moved far inland"
+      "correct_order": "the boat onto the island"
     },
     {
       "id": "H007",
@@ -148,17 +151,18 @@
       "source_url": "https://www.gutenberg.org/ebooks/74",
       "source_note": "Adapted from public-domain human-authored narrative prose.",
       "passage": "Tom stood before the long fence with a brush in his hand. The sunny street looked cheerful, but his work seemed endless.",
-      "memory_sentence": "Tom stood before the long fence with a brush in his hand.",
+      "memory_sentence": "The sunny street looked cheerful, but his work seemed endless.",
       "recognition_question": "Did this sentence appear in the passage?",
       "recognition_sentence": "Tom stood before the long fence with a brush in his hand.",
       "recognition_correct_answer": "yes",
       "scrambled_words": [
+        "looked",
+        "cheerful",
+        "but",
         "his",
-        "work",
-        "seemed",
-        "endless"
+        "street"
       ],
-      "correct_order": "his work seemed endless"
+      "correct_order": "street looked cheerful but his"
     },
     {
       "id": "H008",
@@ -175,12 +179,13 @@
       "recognition_sentence": "Dorothy hid inside the house until night came.",
       "recognition_correct_answer": "no",
       "scrambled_words": [
-        "she",
-        "began",
-        "to",
-        "walk"
+        "the",
+        "yellow",
+        "road",
+        "and",
+        "onto"
       ],
-      "correct_order": "she began to walk"
+      "correct_order": "onto the yellow road and"
     },
     {
       "id": "H009",
@@ -192,17 +197,18 @@
       "source_url": "https://www.gutenberg.org/ebooks/16",
       "source_note": "Adapted from public-domain human-authored narrative prose.",
       "passage": "Wendy heard a sound near the nursery window and turned quickly. The night outside was dark, but a small figure waited.",
-      "memory_sentence": "Wendy heard a sound near the nursery window and turned quickly.",
+      "memory_sentence": "The night outside was dark, but a small figure waited.",
       "recognition_question": "Did this sentence appear in the passage?",
       "recognition_sentence": "Wendy heard a sound near the nursery window and turned quickly.",
       "recognition_correct_answer": "yes",
       "scrambled_words": [
+        "was",
+        "dark",
+        "but",
         "a",
-        "small",
-        "figure",
-        "waited"
+        "outside"
       ],
-      "correct_order": "a small figure waited"
+      "correct_order": "outside was dark but a"
     },
     {
       "id": "H010",
@@ -219,13 +225,13 @@
       "recognition_sentence": "The young horse ran alone through a snowy field.",
       "recognition_correct_answer": "no",
       "scrambled_words": [
+        "in",
         "the",
-        "yard",
-        "smelled",
-        "of",
-        "hay"
+        "stall",
+        "while",
+        "quietly"
       ],
-      "correct_order": "the yard smelled of hay"
+      "correct_order": "quietly in the stall while"
     },
     {
       "id": "H011",
@@ -237,17 +243,18 @@
       "source_url": "https://www.gutenberg.org/ebooks/1448",
       "source_note": "Adapted from public-domain human-authored narrative prose.",
       "passage": "Heidi climbed the mountain path beside her aunt and watched the goats above them. The air smelled fresh, sharp, and sweet.",
-      "memory_sentence": "Heidi climbed the mountain path beside her aunt and watched the goats above them.",
+      "memory_sentence": "The air smelled fresh, sharp, and sweet.",
       "recognition_question": "Did this sentence appear in the passage?",
       "recognition_sentence": "Heidi climbed the mountain path beside her aunt and watched the goats above them.",
       "recognition_correct_answer": "yes",
       "scrambled_words": [
-        "the",
-        "air",
         "smelled",
-        "fresh"
+        "fresh",
+        "sharp",
+        "and",
+        "air"
       ],
-      "correct_order": "the air smelled fresh"
+      "correct_order": "air smelled fresh sharp and"
     },
     {
       "id": "H012",
@@ -264,13 +271,13 @@
       "recognition_sentence": "Pinocchio stayed beside the fire and read quietly.",
       "recognition_correct_answer": "no",
       "scrambled_words": [
+        "road",
+        "with",
         "his",
         "wooden",
-        "feet",
-        "tapped",
-        "loudly"
+        "the"
       ],
-      "correct_order": "his wooden feet tapped loudly"
+      "correct_order": "the road with his wooden"
     },
     {
       "id": "H013",
@@ -282,18 +289,18 @@
       "source_url": "https://www.gutenberg.org/ebooks/1874",
       "source_note": "Adapted from public-domain human-authored narrative prose.",
       "passage": "The children waited near the railway line and waved as the train rushed past. Smoke curled over the field behind them.",
-      "memory_sentence": "The children waited near the railway line and waved as the train rushed past.",
+      "memory_sentence": "Smoke curled over the field behind them.",
       "recognition_question": "Did this sentence appear in the passage?",
       "recognition_correct_answer": "yes",
       "recognition_sentence": "The children waited near the railway line and waved as the train rushed past.",
       "scrambled_words": [
-        "smoke",
-        "curled",
         "over",
         "the",
-        "field"
+        "field",
+        "behind",
+        "curled"
       ],
-      "correct_order": "smoke curled over the field"
+      "correct_order": "curled over the field behind"
     },
     {
       "id": "H014",
@@ -305,17 +312,18 @@
       "source_url": "https://www.gutenberg.org/ebooks/215",
       "source_note": "Adapted from public-domain human-authored narrative prose.",
       "passage": "Buck heard the men calling and lifted his head from the snow. The forest was silent, and the trail went on.",
-      "memory_sentence": "Buck heard the men calling and lifted his head from the snow.",
+      "memory_sentence": "The forest was silent, and the trail went on.",
       "recognition_question": "Did this sentence appear in the passage?",
       "recognition_sentence": "Buck heard the men calling and lifted his head from the snow.",
       "recognition_correct_answer": "yes",
       "scrambled_words": [
+        "silent",
+        "and",
         "the",
         "trail",
-        "went",
-        "on"
+        "was"
       ],
-      "correct_order": "the trail went on"
+      "correct_order": "was silent and the trail"
     },
     {
       "id": "H015",
@@ -332,11 +340,13 @@
       "recognition_sentence": "Their boxes were wet, but everyone was alive.",
       "recognition_correct_answer": "yes",
       "scrambled_words": [
-        "everyone",
-        "was",
-        "alive"
+        "broken",
+        "ship",
+        "and",
+        "looked",
+        "the"
       ],
-      "correct_order": "everyone was alive"
+      "correct_order": "the broken ship and looked"
     },
     {
       "id": "H016",
@@ -348,18 +358,18 @@
       "source_url": "https://www.gutenberg.org/ebooks/700",
       "source_note": "Adapted from public-domain human-authored narrative prose.",
       "passage": "Nell crossed the dark shop and touched the dusty counter. The old house creaked softly, as if it were listening.",
-      "memory_sentence": "Nell crossed the dark shop and touched the dusty counter.",
+      "memory_sentence": "The old house creaked softly, as if it were listening.",
       "recognition_question": "Did this sentence appear in the passage?",
       "recognition_sentence": "Nell crossed the dark shop and touched the dusty counter.",
       "recognition_correct_answer": "yes",
       "scrambled_words": [
-        "the",
-        "old",
-        "house",
         "creaked",
-        "softly"
+        "softly",
+        "as",
+        "if",
+        "house"
       ],
-      "correct_order": "the old house creaked softly"
+      "correct_order": "house creaked softly as if"
     },
     {
       "id": "H017",
@@ -377,12 +387,12 @@
       "recognition_correct_answer": "no",
       "scrambled_words": [
         "the",
-        "house",
-        "appeared",
-        "at",
-        "last"
+        "lane",
+        "holding",
+        "her",
+        "along"
       ],
-      "correct_order": "the house appeared at last"
+      "correct_order": "along the lane holding her"
     },
     {
       "id": "H018",
@@ -399,12 +409,13 @@
       "recognition_sentence": "Later, it gnawed the ropes and set the great animal free.",
       "recognition_correct_answer": "yes",
       "scrambled_words": [
+        "over",
         "the",
-        "great",
-        "animal",
-        "free"
+        "sleeping",
+        "lion",
+        "ran"
       ],
-      "correct_order": "the great animal free"
+      "correct_order": "ran over the sleeping lion"
     },
     {
       "id": "H019",
@@ -416,17 +427,18 @@
       "source_url": "https://www.gutenberg.org/ebooks/12",
       "source_note": "Adapted from public-domain human-authored narrative prose.",
       "passage": "Alice touched the glass and found that it was soft like mist. In a moment, she was standing in another room.",
-      "memory_sentence": "Alice touched the glass and found that it was soft like mist.",
+      "memory_sentence": "In a moment, she was standing in another room.",
       "recognition_question": "Did this sentence appear in the passage?",
       "recognition_sentence": "Alice touched the glass and found that it was soft like mist.",
       "recognition_correct_answer": "yes",
       "scrambled_words": [
+        "she",
+        "was",
         "standing",
         "in",
-        "another",
-        "room"
+        "moment"
       ],
-      "correct_order": "standing in another room"
+      "correct_order": "moment she was standing in"
     },
     {
       "id": "H020",
@@ -443,11 +455,13 @@
       "recognition_sentence": "The afternoon was mild, and visitors were expected.",
       "recognition_correct_answer": "yes",
       "scrambled_words": [
-        "visitors",
-        "were",
-        "expected"
+        "and",
+        "watched",
+        "the",
+        "carriage",
+        "gate"
       ],
-      "correct_order": "visitors were expected"
+      "correct_order": "gate and watched the carriage"
     }
   ]
 }

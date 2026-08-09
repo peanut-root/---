@@ -334,6 +334,25 @@
       accent-color: var(--blue);
     }
 
+    .likert-scale {
+      display: grid;
+      gap: 8px;
+    }
+
+    .likert-anchors {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .likert-anchors span:last-child {
+      text-align: right;
+    }
+
     .likert {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -547,125 +566,125 @@
     <main>
       <section class="screen active" id="welcomeScreen">
         <div class="narrow">
-          <h2>Experiment Instructions</h2>
-          <p class="muted">This study examines how bilingual students judge the authorship of English texts and how different text types affect second-language memory.</p>
+          <h2>实验说明</h2>
+          <p class="muted">本研究旨在了解双语学习者如何判断英文短文本的来源，并考察不同来源类型的文本是否会影响二语阅读记忆。实验全程匿名，结果仅用于课堂研究和数据分析。</p>
           <div class="cards">
             <article class="card">
-              <h3>Task 1</h3>
-              <p class="muted">Measures intuitive authorship perception: human-written, AI-generated, hybrid, or uncertain.</p>
+              <h3>第一步：背景问卷</h3>
+              <p class="muted">实验正式开始前，你需要填写教育阶段、英语学习年限、语言能力自评、英文阅读频率以及 AI 工具使用经验。所有题目都填写完成后，才能进入实验。</p>
             </article>
             <article class="card">
-              <h3>Task 2</h3>
-              <p class="muted">Measures psycholinguistic cues such as fluency, structure, emotion, and personal voice.</p>
+              <h3>第二步：阅读与来源判断</h3>
+              <p class="muted">每个试次开始前都会出现准备页。准备好后按空格键阅读英文短文本；读完后点击“已读完”，再用数字键判断文本来源：人工、AI、人机混合或不确定。</p>
             </article>
             <article class="card">
-              <h3>Task 3</h3>
-              <p class="muted">Measures L2 text memory and working-memory encoding after reading each English passage.</p>
+              <h3>第三步：评分与记忆任务</h3>
+              <p class="muted">随后，你需要完成 1-5 分量表评分、一个简短填充题，以及两个记忆题：判断某个句子是否在原文中出现过，并按原文语序排列给出的词块。</p>
             </article>
           </div>
           <div class="summary-box">
-            <h3>Before you begin</h3>
-            <p class="muted">This full version randomly selects 9-12 short passages from a larger human-written narrative pool. During the trial pages, the interface shows only the text, required questions, and response options so extra instructions do not distract the participant.</p>
-            <p class="muted">The experiment randomizes passage selection and order, then records keyboard reaction times, accuracy, timestamps, and source variables for each trial.</p>
+            <h3>开始前请确认</h3>
+            <p class="muted">正式实验会随机呈现 9-12 段英文记叙文短文本。实验过程中，页面只显示当前任务所需的信息，不会显示文本的真实来源、提示词、API 信息或研究者设置。</p>
+            <p class="muted">所有需要记录反应时的环节都必须使用键盘作答：来源判断使用数字键 1/2/3/4；再认题使用 F/J；填充题使用 V/C 或 O/E；词块排序完成后按 Enter 提交。</p>
+            <p class="muted">请不要在实验中途刷新、关闭页面或更换设备。只有完整完成所有试次并看到 Thank you 页面后，数据才会被保存；中途退出不会计入正式实验数据。</p>
           </div>
           <div class="attention">
-            Please complete this study on a computer. Timed sections require keyboard responses: number keys, F/J, V/C, and Enter.
+            请务必使用电脑完成实验，并将键盘放在便于操作的位置。手机或平板不适合本实验。
           </div>
-          <p class="muted">Data are anonymous and used only for classroom research. This participant page does not show researcher settings, API prompts, source labels, or debugging information.</p>
           <div class="button-row">
-            <button id="startBtn">Start Experiment</button>
+            <button id="startBtn">进入背景问卷</button>
           </div>
         </div>
       </section>
 
       <section class="screen" id="backgroundScreen">
         <form class="narrow" id="backgroundForm">
-          <h2>Participant Background</h2>
-          <p class="muted">Please complete the required screening questions before the timed trials.</p>
+          <h2>背景问卷</h2>
+          <p class="muted">请先完成以下基本信息题。这里没有计时；进入正式试次后，阅读、判断和记忆任务才会记录反应时。</p>
           <div class="grid">
             <label>
-              <span>Education level *</span>
+              <span>当前教育阶段 *</span>
               <select id="grade" required>
-                <option value="">Select one</option>
-                <option>High school</option>
-                <option>Year 1 undergraduate</option>
-                <option>Year 2 undergraduate</option>
-                <option>Year 3 undergraduate</option>
-                <option>Year 4 undergraduate</option>
-                <option>Master's student</option>
-                <option>Doctoral student</option>
-                <option>Other</option>
+                <option value="">请选择</option>
+                <option value="High school">高中 / High school</option>
+                <option value="Year 1 undergraduate">本科一年级 / Year 1 undergraduate</option>
+                <option value="Year 2 undergraduate">本科二年级 / Year 2 undergraduate</option>
+                <option value="Year 3 undergraduate">本科三年级 / Year 3 undergraduate</option>
+                <option value="Year 4 undergraduate">本科四年级 / Year 4 undergraduate</option>
+                <option value="Master's student">硕士研究生 / Master's student</option>
+                <option value="Doctoral student">博士研究生 / Doctoral student</option>
+                <option value="Other">其他 / Other</option>
               </select>
             </label>
             <label>
-              <span>Years of English learning *</span>
+              <span>英语学习年限 *</span>
               <select id="yearsEnglish" required>
-                <option value="">Select one</option>
-                <option value="0-3">0-3 years</option>
-                <option value="4-6">4-6 years</option>
-                <option value="7-9">7-9 years</option>
-                <option value="10-12">10-12 years</option>
-                <option value="13+">13+ years</option>
+                <option value="">请选择</option>
+                <option value="0-3">0-3 年</option>
+                <option value="4-6">4-6 年</option>
+                <option value="7-9">7-9 年</option>
+                <option value="10-12">10-12 年</option>
+                <option value="13+">13 年以上</option>
               </select>
             </label>
             <label>
-              <span>English reading proficiency *</span>
+              <span>英文阅读能力自评 *</span>
               <select id="englishProficiency" required>
-                <option value="">Select 1-5</option>
-                <option value="1">1 - very low</option>
+                <option value="">请选择 1-5</option>
+                <option value="1">1 - 很低 / very low</option>
                 <option value="2">2</option>
-                <option value="3">3 - moderate</option>
+                <option value="3">3 - 中等 / moderate</option>
                 <option value="4">4</option>
-                <option value="5">5 - very high</option>
+                <option value="5">5 - 很高 / very high</option>
               </select>
             </label>
             <label>
-              <span>Chinese proficiency *</span>
+              <span>中文能力自评 *</span>
               <select id="chineseProficiency" required>
-                <option value="">Select 1-5</option>
-                <option value="1">1 - very low</option>
+                <option value="">请选择 1-5</option>
+                <option value="1">1 - 很低 / very low</option>
                 <option value="2">2</option>
-                <option value="3">3 - moderate</option>
+                <option value="3">3 - 中等 / moderate</option>
                 <option value="4">4</option>
-                <option value="5">5 - very high</option>
+                <option value="5">5 - 很高 / very high</option>
               </select>
             </label>
             <label>
-              <span>Frequency of English reading *</span>
+              <span>英文阅读频率 *</span>
               <select id="englishReadingFrequency" required>
-                <option value="">Select one</option>
-                <option>Rarely</option>
-                <option>Sometimes</option>
-                <option>Often</option>
-                <option>Daily</option>
+                <option value="">请选择</option>
+                <option value="Rarely">很少 / Rarely</option>
+                <option value="Sometimes">有时 / Sometimes</option>
+                <option value="Often">经常 / Often</option>
+                <option value="Daily">每天 / Daily</option>
               </select>
             </label>
             <label>
-              <span>Frequency of AI tool use *</span>
+              <span>AI 工具使用频率 *</span>
               <select id="aiUseFrequency" required>
-                <option value="">Select one</option>
-                <option>Rarely</option>
-                <option>Sometimes</option>
-                <option>Often</option>
-                <option>Daily</option>
+                <option value="">请选择</option>
+                <option value="Rarely">很少 / Rarely</option>
+                <option value="Sometimes">有时 / Sometimes</option>
+                <option value="Often">经常 / Often</option>
+                <option value="Daily">每天 / Daily</option>
               </select>
             </label>
             <label class="full">
-              <span>Familiarity with AI-generated writing *</span>
+              <span>对 AI 生成文本的熟悉程度 *</span>
               <select id="aiWritingFamiliarity" required>
-                <option value="">Select 1-5</option>
-                <option value="1">1 - not familiar</option>
+                <option value="">请选择 1-5</option>
+                <option value="1">1 - 完全不熟悉 / not familiar</option>
                 <option value="2">2</option>
-                <option value="3">3 - moderately familiar</option>
+                <option value="3">3 - 中等熟悉 / moderately familiar</option>
                 <option value="4">4</option>
-                <option value="5">5 - very familiar</option>
+                <option value="5">5 - 非常熟悉 / very familiar</option>
               </select>
             </label>
           </div>
           <p class="error" id="backgroundError"></p>
           <div class="button-row">
-            <button type="submit">Continue to Trials</button>
-            <button class="secondary" type="button" id="backToWelcomeBtn">Back</button>
+            <button type="submit">进入正式试次</button>
+            <button class="secondary" type="button" id="backToWelcomeBtn">返回说明页</button>
           </div>
         </form>
       </section>
@@ -702,7 +721,7 @@
           </fieldset>
           <fieldset>
             <legend>How likely is this text AI-generated? *</legend>
-            <div class="likert" id="aiLikelihoodLikert"></div>
+            <div id="aiLikelihoodLikert"></div>
           </fieldset>
           <p class="error" id="judgmentError"></p>
           <button id="judgmentNextBtn">Continue</button>
@@ -767,358 +786,513 @@
     // Human-written source pool. Each item is a short classroom-ready adaptation of public-domain narrative prose.
     // Source metadata are stored for the researcher and CSV only; participants never see source labels.
     const HUMAN_PASSAGE_POOL = [
-      {
-        id: "H001",
-        topic: "A Garden Door",
-        text_type: "Human-written",
-        pair_id: "public_domain_pool",
-        source_title: "The Secret Garden",
-        source_author: "Frances Hodgson Burnett",
-        source_url: "https://www.gutenberg.org/ebooks/113",
-        source_note: "Adapted from public-domain human-authored narrative prose.",
-        passage: "Mary found the garden door under thick ivy and pushed it open slowly. The quiet path inside looked strange, green, and secret.",
-        memory_sentence: "Mary found the garden door under thick ivy and pushed it open slowly.",
-        recognition_question: "Did this sentence appear in the passage?",
-        recognition_sentence: "Mary found the garden door under thick ivy and pushed it open slowly.",
-        recognition_correct_answer: "yes",
-        scrambled_words: ["the", "quiet", "path", "looked", "secret"],
-        correct_order: "the quiet path looked secret"
-      },
-      {
-        id: "H002",
-        topic: "The River Bank",
-        text_type: "Human-written",
-        pair_id: "public_domain_pool",
-        source_title: "The Wind in the Willows",
-        source_author: "Kenneth Grahame",
-        source_url: "https://www.gutenberg.org/ebooks/289",
-        source_note: "Adapted from public-domain human-authored narrative prose.",
-        passage: "Mole reached the river bank and stared at the bright water. Boats moved past him, and the whole morning seemed new.",
-        memory_sentence: "Mole reached the river bank and stared at the bright water.",
-        recognition_question: "Did this sentence appear in the passage?",
-        recognition_sentence: "Mole reached the river bank and stared at the bright water.",
-        recognition_correct_answer: "yes",
-        scrambled_words: ["the", "whole", "morning", "seemed", "new"],
-        correct_order: "the whole morning seemed new"
-      },
-      {
-        id: "H003",
-        topic: "A White Rabbit",
-        text_type: "Human-written",
-        pair_id: "public_domain_pool",
-        source_title: "Alice's Adventures in Wonderland",
-        source_author: "Lewis Carroll",
-        source_url: "https://www.gutenberg.org/ebooks/11",
-        source_note: "Adapted from public-domain human-authored narrative prose.",
-        passage: "Alice saw a white rabbit hurry across the grass with a watch in its paw. She followed before thinking what might happen.",
-        memory_sentence: "Alice saw a white rabbit hurry across the grass with a watch in its paw.",
-        recognition_question: "Did this sentence appear in the passage?",
-        recognition_sentence: "Alice saw a white rabbit hurry across the grass with a watch in its paw.",
-        recognition_correct_answer: "yes",
-        scrambled_words: ["she", "followed", "before", "thinking"],
-        correct_order: "she followed before thinking"
-      },
-      {
-        id: "H004",
-        topic: "The Orchard",
-        text_type: "Human-written",
-        pair_id: "public_domain_pool",
-        source_title: "Anne of Green Gables",
-        source_author: "L. M. Montgomery",
-        source_url: "https://www.gutenberg.org/ebooks/45",
-        source_note: "Adapted from public-domain human-authored narrative prose.",
-        passage: "Anne walked beneath the orchard trees and looked up at the pink blossoms. She felt the road to Green Gables was beautiful.",
-        memory_sentence: "Anne walked beneath the orchard trees and looked up at the pink blossoms.",
-        recognition_question: "Did this sentence appear in the passage?",
-        recognition_sentence: "Anne walked beside the sea and listened to the waves.",
-        recognition_correct_answer: "no",
-        scrambled_words: ["the", "pink", "blossoms", "looked", "beautiful"],
-        correct_order: "the pink blossoms looked beautiful"
-      },
-      {
-        id: "H005",
-        topic: "A Winter Evening",
-        text_type: "Human-written",
-        pair_id: "public_domain_pool",
-        source_title: "Little Women",
-        source_author: "Louisa May Alcott",
-        source_url: "https://www.gutenberg.org/ebooks/514",
-        source_note: "Adapted from public-domain human-authored narrative prose.",
-        passage: "The four sisters sat near the fire while snow pressed against the windows. Their small room felt warm, busy, and safe.",
-        memory_sentence: "The four sisters sat near the fire while snow pressed against the windows.",
-        recognition_question: "Did this sentence appear in the passage?",
-        recognition_sentence: "The four sisters sat near the fire while snow pressed against the windows.",
-        recognition_correct_answer: "yes",
-        scrambled_words: ["the", "room", "felt", "warm"],
-        correct_order: "the room felt warm"
-      },
-      {
-        id: "H006",
-        topic: "The Island Shore",
-        text_type: "Human-written",
-        pair_id: "public_domain_pool",
-        source_title: "Treasure Island",
-        source_author: "Robert Louis Stevenson",
-        source_url: "https://www.gutenberg.org/ebooks/120",
-        source_note: "Adapted from public-domain human-authored narrative prose.",
-        passage: "Jim climbed from the boat onto the island sand and listened. The trees were still, but something moved far inland.",
-        memory_sentence: "Jim climbed from the boat onto the island sand and listened.",
-        recognition_question: "Did this sentence appear in the passage?",
-        recognition_sentence: "The trees were still, but something moved far inland.",
-        recognition_correct_answer: "yes",
-        scrambled_words: ["something", "moved", "far", "inland"],
-        correct_order: "something moved far inland"
-      },
-      {
-        id: "H007",
-        topic: "A Fence",
-        text_type: "Human-written",
-        pair_id: "public_domain_pool",
-        source_title: "The Adventures of Tom Sawyer",
-        source_author: "Mark Twain",
-        source_url: "https://www.gutenberg.org/ebooks/74",
-        source_note: "Adapted from public-domain human-authored narrative prose.",
-        passage: "Tom stood before the long fence with a brush in his hand. The sunny street looked cheerful, but his work seemed endless.",
-        memory_sentence: "Tom stood before the long fence with a brush in his hand.",
-        recognition_question: "Did this sentence appear in the passage?",
-        recognition_sentence: "Tom stood before the long fence with a brush in his hand.",
-        recognition_correct_answer: "yes",
-        scrambled_words: ["his", "work", "seemed", "endless"],
-        correct_order: "his work seemed endless"
-      },
-      {
-        id: "H008",
-        topic: "The Yellow Road",
-        text_type: "Human-written",
-        pair_id: "public_domain_pool",
-        source_title: "The Wonderful Wizard of Oz",
-        source_author: "L. Frank Baum",
-        source_url: "https://www.gutenberg.org/ebooks/55",
-        source_note: "Adapted from public-domain human-authored narrative prose.",
-        passage: "Dorothy stepped onto the yellow road and held Toto close. The strange country glittered around her, and she began to walk.",
-        memory_sentence: "Dorothy stepped onto the yellow road and held Toto close.",
-        recognition_question: "Did this sentence appear in the passage?",
-        recognition_sentence: "Dorothy hid inside the house until night came.",
-        recognition_correct_answer: "no",
-        scrambled_words: ["she", "began", "to", "walk"],
-        correct_order: "she began to walk"
-      },
-      {
-        id: "H009",
-        topic: "The Nursery Window",
-        text_type: "Human-written",
-        pair_id: "public_domain_pool",
-        source_title: "Peter Pan",
-        source_author: "J. M. Barrie",
-        source_url: "https://www.gutenberg.org/ebooks/16",
-        source_note: "Adapted from public-domain human-authored narrative prose.",
-        passage: "Wendy heard a sound near the nursery window and turned quickly. The night outside was dark, but a small figure waited.",
-        memory_sentence: "Wendy heard a sound near the nursery window and turned quickly.",
-        recognition_question: "Did this sentence appear in the passage?",
-        recognition_sentence: "Wendy heard a sound near the nursery window and turned quickly.",
-        recognition_correct_answer: "yes",
-        scrambled_words: ["a", "small", "figure", "waited"],
-        correct_order: "a small figure waited"
-      },
-      {
-        id: "H010",
-        topic: "A Pony's Stall",
-        text_type: "Human-written",
-        pair_id: "public_domain_pool",
-        source_title: "Black Beauty",
-        source_author: "Anna Sewell",
-        source_url: "https://www.gutenberg.org/ebooks/271",
-        source_note: "Adapted from public-domain human-authored narrative prose.",
-        passage: "The young horse stood quietly in the stall while the groom spoke softly. Outside, the yard smelled of hay and rain.",
-        memory_sentence: "The young horse stood quietly in the stall while the groom spoke softly.",
-        recognition_question: "Did this sentence appear in the passage?",
-        recognition_sentence: "The young horse ran alone through a snowy field.",
-        recognition_correct_answer: "no",
-        scrambled_words: ["the", "yard", "smelled", "of", "hay"],
-        correct_order: "the yard smelled of hay"
-      },
-      {
-        id: "H011",
-        topic: "A Mountain Path",
-        text_type: "Human-written",
-        pair_id: "public_domain_pool",
-        source_title: "Heidi",
-        source_author: "Johanna Spyri",
-        source_url: "https://www.gutenberg.org/ebooks/1448",
-        source_note: "Adapted from public-domain human-authored narrative prose.",
-        passage: "Heidi climbed the mountain path beside her aunt and watched the goats above them. The air smelled fresh, sharp, and sweet.",
-        memory_sentence: "Heidi climbed the mountain path beside her aunt and watched the goats above them.",
-        recognition_question: "Did this sentence appear in the passage?",
-        recognition_sentence: "Heidi climbed the mountain path beside her aunt and watched the goats above them.",
-        recognition_correct_answer: "yes",
-        scrambled_words: ["the", "air", "smelled", "fresh"],
-        correct_order: "the air smelled fresh"
-      },
-      {
-        id: "H012",
-        topic: "A Wooden Boy",
-        text_type: "Human-written",
-        pair_id: "public_domain_pool",
-        source_title: "The Adventures of Pinocchio",
-        source_author: "Carlo Collodi",
-        source_url: "https://www.gutenberg.org/ebooks/500",
-        source_note: "Adapted from public-domain human-authored narrative prose.",
-        passage: "Pinocchio ran down the road with his wooden feet tapping loudly. He forgot the warning and looked only at the town.",
-        memory_sentence: "Pinocchio ran down the road with his wooden feet tapping loudly.",
-        recognition_question: "Did this sentence appear in the passage?",
-        recognition_sentence: "Pinocchio stayed beside the fire and read quietly.",
-        recognition_correct_answer: "no",
-        scrambled_words: ["his", "wooden", "feet", "tapped", "loudly"],
-        correct_order: "his wooden feet tapped loudly"
-      },
-      {
-        id: "H013",
-        topic: "A Train Platform",
-        text_type: "Human-written",
-        pair_id: "public_domain_pool",
-        source_title: "The Railway Children",
-        source_author: "E. Nesbit",
-        source_url: "https://www.gutenberg.org/ebooks/1874",
-        source_note: "Adapted from public-domain human-authored narrative prose.",
-        passage: "The children waited near the railway line and waved as the train rushed past. Smoke curled over the field behind them.",
-        memory_sentence: "The children waited near the railway line and waved as the train rushed past.",
-        recognition_question: "Did this sentence appear in the passage?",
-        recognition_correct_answer: "yes",
-        recognition_sentence: "The children waited near the railway line and waved as the train rushed past.",
-        scrambled_words: ["smoke", "curled", "over", "the", "field"],
-        correct_order: "smoke curled over the field"
-      },
-      {
-        id: "H014",
-        topic: "A Wild Dog",
-        text_type: "Human-written",
-        pair_id: "public_domain_pool",
-        source_title: "The Call of the Wild",
-        source_author: "Jack London",
-        source_url: "https://www.gutenberg.org/ebooks/215",
-        source_note: "Adapted from public-domain human-authored narrative prose.",
-        passage: "Buck heard the men calling and lifted his head from the snow. The forest was silent, and the trail went on.",
-        memory_sentence: "Buck heard the men calling and lifted his head from the snow.",
-        recognition_question: "Did this sentence appear in the passage?",
-        recognition_sentence: "Buck heard the men calling and lifted his head from the snow.",
-        recognition_correct_answer: "yes",
-        scrambled_words: ["the", "trail", "went", "on"],
-        correct_order: "the trail went on"
-      },
-      {
-        id: "H015",
-        topic: "A Sea Voyage",
-        text_type: "Human-written",
-        pair_id: "public_domain_pool",
-        source_title: "The Swiss Family Robinson",
-        source_author: "Johann David Wyss",
-        source_url: "https://www.gutenberg.org/ebooks/3836",
-        source_note: "Adapted from public-domain human-authored narrative prose.",
-        passage: "The family climbed from the broken ship and looked toward the strange shore. Their boxes were wet, but everyone was alive.",
-        memory_sentence: "The family climbed from the broken ship and looked toward the strange shore.",
-        recognition_question: "Did this sentence appear in the passage?",
-        recognition_sentence: "Their boxes were wet, but everyone was alive.",
-        recognition_correct_answer: "yes",
-        scrambled_words: ["everyone", "was", "alive"],
-        correct_order: "everyone was alive"
-      },
-      {
-        id: "H016",
-        topic: "An Old House",
-        text_type: "Human-written",
-        pair_id: "public_domain_pool",
-        source_title: "The Old Curiosity Shop",
-        source_author: "Charles Dickens",
-        source_url: "https://www.gutenberg.org/ebooks/700",
-        source_note: "Adapted from public-domain human-authored narrative prose.",
-        passage: "Nell crossed the dark shop and touched the dusty counter. The old house creaked softly, as if it were listening.",
-        memory_sentence: "Nell crossed the dark shop and touched the dusty counter.",
-        recognition_question: "Did this sentence appear in the passage?",
-        recognition_sentence: "Nell crossed the dark shop and touched the dusty counter.",
-        recognition_correct_answer: "yes",
-        scrambled_words: ["the", "old", "house", "creaked", "softly"],
-        correct_order: "the old house creaked softly"
-      },
-      {
-        id: "H017",
-        topic: "A Village Visit",
-        text_type: "Human-written",
-        pair_id: "public_domain_pool",
-        source_title: "Pride and Prejudice",
-        source_author: "Jane Austen",
-        source_url: "https://www.gutenberg.org/ebooks/1342",
-        source_note: "Adapted from public-domain human-authored narrative prose.",
-        passage: "Elizabeth walked quickly along the lane, holding her dress above the mud. The house appeared beyond the trees at last.",
-        memory_sentence: "Elizabeth walked quickly along the lane, holding her dress above the mud.",
-        recognition_question: "Did this sentence appear in the passage?",
-        recognition_sentence: "Elizabeth rode slowly across a frozen lake.",
-        recognition_correct_answer: "no",
-        scrambled_words: ["the", "house", "appeared", "at", "last"],
-        correct_order: "the house appeared at last"
-      },
-      {
-        id: "H018",
-        topic: "A Lion's Paw",
-        text_type: "Human-written",
-        pair_id: "public_domain_pool",
-        source_title: "Aesop's Fables",
-        source_author: "Aesop",
-        source_url: "https://www.gutenberg.org/ebooks/11339",
-        source_note: "Adapted from public-domain human-authored fable narrative.",
-        passage: "The mouse ran over the sleeping lion and woke him. Later, it gnawed the ropes and set the great animal free.",
-        memory_sentence: "The mouse ran over the sleeping lion and woke him.",
-        recognition_question: "Did this sentence appear in the passage?",
-        recognition_sentence: "Later, it gnawed the ropes and set the great animal free.",
-        recognition_correct_answer: "yes",
-        scrambled_words: ["the", "great", "animal", "free"],
-        correct_order: "the great animal free"
-      },
-      {
-        id: "H019",
-        topic: "A Looking Glass",
-        text_type: "Human-written",
-        pair_id: "public_domain_pool",
-        source_title: "Through the Looking-Glass",
-        source_author: "Lewis Carroll",
-        source_url: "https://www.gutenberg.org/ebooks/12",
-        source_note: "Adapted from public-domain human-authored narrative prose.",
-        passage: "Alice touched the glass and found that it was soft like mist. In a moment, she was standing in another room.",
-        memory_sentence: "Alice touched the glass and found that it was soft like mist.",
-        recognition_question: "Did this sentence appear in the passage?",
-        recognition_sentence: "Alice touched the glass and found that it was soft like mist.",
-        recognition_correct_answer: "yes",
-        scrambled_words: ["standing", "in", "another", "room"],
-        correct_order: "standing in another room"
-      },
-      {
-        id: "H020",
-        topic: "A Country Lane",
-        text_type: "Human-written",
-        pair_id: "public_domain_pool",
-        source_title: "Emma",
-        source_author: "Jane Austen",
-        source_url: "https://www.gutenberg.org/ebooks/158",
-        source_note: "Adapted from public-domain human-authored narrative prose.",
-        passage: "Emma paused at the gate and watched the carriage turn into the lane. The afternoon was mild, and visitors were expected.",
-        memory_sentence: "Emma paused at the gate and watched the carriage turn into the lane.",
-        recognition_question: "Did this sentence appear in the passage?",
-        recognition_sentence: "The afternoon was mild, and visitors were expected.",
-        recognition_correct_answer: "yes",
-        scrambled_words: ["visitors", "were", "expected"],
-        correct_order: "visitors were expected"
-      }
+          {
+                "id": "H001",
+                "topic": "A Garden Door",
+                "text_type": "Human-written",
+                "pair_id": "public_domain_pool",
+                "source_title": "The Secret Garden",
+                "source_author": "Frances Hodgson Burnett",
+                "source_url": "https://www.gutenberg.org/ebooks/113",
+                "source_note": "Adapted from public-domain human-authored narrative prose.",
+                "passage": "Mary found the garden door under thick ivy and pushed it open slowly. The quiet path inside looked strange, green, and secret.",
+                "memory_sentence": "The quiet path inside looked strange, green, and secret.",
+                "recognition_question": "Did this sentence appear in the passage?",
+                "recognition_sentence": "Mary found the garden door under thick ivy and pushed it open slowly.",
+                "recognition_correct_answer": "yes",
+                "scrambled_words": [
+                      "inside",
+                      "looked",
+                      "strange",
+                      "green",
+                      "path"
+                ],
+                "correct_order": "path inside looked strange green"
+          },
+          {
+                "id": "H002",
+                "topic": "The River Bank",
+                "text_type": "Human-written",
+                "pair_id": "public_domain_pool",
+                "source_title": "The Wind in the Willows",
+                "source_author": "Kenneth Grahame",
+                "source_url": "https://www.gutenberg.org/ebooks/289",
+                "source_note": "Adapted from public-domain human-authored narrative prose.",
+                "passage": "Mole reached the river bank and stared at the bright water. Boats moved past him, and the whole morning seemed new.",
+                "memory_sentence": "Boats moved past him, and the whole morning seemed new.",
+                "recognition_question": "Did this sentence appear in the passage?",
+                "recognition_sentence": "Mole reached the river bank and stared at the bright water.",
+                "recognition_correct_answer": "yes",
+                "scrambled_words": [
+                      "him",
+                      "and",
+                      "the",
+                      "whole",
+                      "past"
+                ],
+                "correct_order": "past him and the whole"
+          },
+          {
+                "id": "H003",
+                "topic": "A White Rabbit",
+                "text_type": "Human-written",
+                "pair_id": "public_domain_pool",
+                "source_title": "Alice's Adventures in Wonderland",
+                "source_author": "Lewis Carroll",
+                "source_url": "https://www.gutenberg.org/ebooks/11",
+                "source_note": "Adapted from public-domain human-authored narrative prose.",
+                "passage": "Alice saw a white rabbit hurry across the grass with a watch in its paw. She followed before thinking what might happen.",
+                "memory_sentence": "She followed before thinking what might happen.",
+                "recognition_question": "Did this sentence appear in the passage?",
+                "recognition_sentence": "Alice saw a white rabbit hurry across the grass with a watch in its paw.",
+                "recognition_correct_answer": "yes",
+                "scrambled_words": [
+                      "before",
+                      "thinking",
+                      "what",
+                      "might",
+                      "followed"
+                ],
+                "correct_order": "followed before thinking what might"
+          },
+          {
+                "id": "H004",
+                "topic": "The Orchard",
+                "text_type": "Human-written",
+                "pair_id": "public_domain_pool",
+                "source_title": "Anne of Green Gables",
+                "source_author": "L. M. Montgomery",
+                "source_url": "https://www.gutenberg.org/ebooks/45",
+                "source_note": "Adapted from public-domain human-authored narrative prose.",
+                "passage": "Anne walked beneath the orchard trees and looked up at the pink blossoms. She felt the road to Green Gables was beautiful.",
+                "memory_sentence": "Anne walked beneath the orchard trees and looked up at the pink blossoms.",
+                "recognition_question": "Did this sentence appear in the passage?",
+                "recognition_sentence": "Anne walked beside the sea and listened to the waves.",
+                "recognition_correct_answer": "no",
+                "scrambled_words": [
+                      "trees",
+                      "and",
+                      "looked",
+                      "up",
+                      "orchard"
+                ],
+                "correct_order": "orchard trees and looked up"
+          },
+          {
+                "id": "H005",
+                "topic": "A Winter Evening",
+                "text_type": "Human-written",
+                "pair_id": "public_domain_pool",
+                "source_title": "Little Women",
+                "source_author": "Louisa May Alcott",
+                "source_url": "https://www.gutenberg.org/ebooks/514",
+                "source_note": "Adapted from public-domain human-authored narrative prose.",
+                "passage": "The four sisters sat near the fire while snow pressed against the windows. Their small room felt warm, busy, and safe.",
+                "memory_sentence": "Their small room felt warm, busy, and safe.",
+                "recognition_question": "Did this sentence appear in the passage?",
+                "recognition_sentence": "The four sisters sat near the fire while snow pressed against the windows.",
+                "recognition_correct_answer": "yes",
+                "scrambled_words": [
+                      "room",
+                      "felt",
+                      "warm",
+                      "busy",
+                      "small"
+                ],
+                "correct_order": "small room felt warm busy"
+          },
+          {
+                "id": "H006",
+                "topic": "The Island Shore",
+                "text_type": "Human-written",
+                "pair_id": "public_domain_pool",
+                "source_title": "Treasure Island",
+                "source_author": "Robert Louis Stevenson",
+                "source_url": "https://www.gutenberg.org/ebooks/120",
+                "source_note": "Adapted from public-domain human-authored narrative prose.",
+                "passage": "Jim climbed from the boat onto the island sand and listened. The trees were still, but something moved far inland.",
+                "memory_sentence": "Jim climbed from the boat onto the island sand and listened.",
+                "recognition_question": "Did this sentence appear in the passage?",
+                "recognition_sentence": "The trees were still, but something moved far inland.",
+                "recognition_correct_answer": "yes",
+                "scrambled_words": [
+                      "boat",
+                      "onto",
+                      "the",
+                      "island",
+                      "the"
+                ],
+                "correct_order": "the boat onto the island"
+          },
+          {
+                "id": "H007",
+                "topic": "A Fence",
+                "text_type": "Human-written",
+                "pair_id": "public_domain_pool",
+                "source_title": "The Adventures of Tom Sawyer",
+                "source_author": "Mark Twain",
+                "source_url": "https://www.gutenberg.org/ebooks/74",
+                "source_note": "Adapted from public-domain human-authored narrative prose.",
+                "passage": "Tom stood before the long fence with a brush in his hand. The sunny street looked cheerful, but his work seemed endless.",
+                "memory_sentence": "The sunny street looked cheerful, but his work seemed endless.",
+                "recognition_question": "Did this sentence appear in the passage?",
+                "recognition_sentence": "Tom stood before the long fence with a brush in his hand.",
+                "recognition_correct_answer": "yes",
+                "scrambled_words": [
+                      "looked",
+                      "cheerful",
+                      "but",
+                      "his",
+                      "street"
+                ],
+                "correct_order": "street looked cheerful but his"
+          },
+          {
+                "id": "H008",
+                "topic": "The Yellow Road",
+                "text_type": "Human-written",
+                "pair_id": "public_domain_pool",
+                "source_title": "The Wonderful Wizard of Oz",
+                "source_author": "L. Frank Baum",
+                "source_url": "https://www.gutenberg.org/ebooks/55",
+                "source_note": "Adapted from public-domain human-authored narrative prose.",
+                "passage": "Dorothy stepped onto the yellow road and held Toto close. The strange country glittered around her, and she began to walk.",
+                "memory_sentence": "Dorothy stepped onto the yellow road and held Toto close.",
+                "recognition_question": "Did this sentence appear in the passage?",
+                "recognition_sentence": "Dorothy hid inside the house until night came.",
+                "recognition_correct_answer": "no",
+                "scrambled_words": [
+                      "the",
+                      "yellow",
+                      "road",
+                      "and",
+                      "onto"
+                ],
+                "correct_order": "onto the yellow road and"
+          },
+          {
+                "id": "H009",
+                "topic": "The Nursery Window",
+                "text_type": "Human-written",
+                "pair_id": "public_domain_pool",
+                "source_title": "Peter Pan",
+                "source_author": "J. M. Barrie",
+                "source_url": "https://www.gutenberg.org/ebooks/16",
+                "source_note": "Adapted from public-domain human-authored narrative prose.",
+                "passage": "Wendy heard a sound near the nursery window and turned quickly. The night outside was dark, but a small figure waited.",
+                "memory_sentence": "The night outside was dark, but a small figure waited.",
+                "recognition_question": "Did this sentence appear in the passage?",
+                "recognition_sentence": "Wendy heard a sound near the nursery window and turned quickly.",
+                "recognition_correct_answer": "yes",
+                "scrambled_words": [
+                      "was",
+                      "dark",
+                      "but",
+                      "a",
+                      "outside"
+                ],
+                "correct_order": "outside was dark but a"
+          },
+          {
+                "id": "H010",
+                "topic": "A Pony's Stall",
+                "text_type": "Human-written",
+                "pair_id": "public_domain_pool",
+                "source_title": "Black Beauty",
+                "source_author": "Anna Sewell",
+                "source_url": "https://www.gutenberg.org/ebooks/271",
+                "source_note": "Adapted from public-domain human-authored narrative prose.",
+                "passage": "The young horse stood quietly in the stall while the groom spoke softly. Outside, the yard smelled of hay and rain.",
+                "memory_sentence": "The young horse stood quietly in the stall while the groom spoke softly.",
+                "recognition_question": "Did this sentence appear in the passage?",
+                "recognition_sentence": "The young horse ran alone through a snowy field.",
+                "recognition_correct_answer": "no",
+                "scrambled_words": [
+                      "in",
+                      "the",
+                      "stall",
+                      "while",
+                      "quietly"
+                ],
+                "correct_order": "quietly in the stall while"
+          },
+          {
+                "id": "H011",
+                "topic": "A Mountain Path",
+                "text_type": "Human-written",
+                "pair_id": "public_domain_pool",
+                "source_title": "Heidi",
+                "source_author": "Johanna Spyri",
+                "source_url": "https://www.gutenberg.org/ebooks/1448",
+                "source_note": "Adapted from public-domain human-authored narrative prose.",
+                "passage": "Heidi climbed the mountain path beside her aunt and watched the goats above them. The air smelled fresh, sharp, and sweet.",
+                "memory_sentence": "The air smelled fresh, sharp, and sweet.",
+                "recognition_question": "Did this sentence appear in the passage?",
+                "recognition_sentence": "Heidi climbed the mountain path beside her aunt and watched the goats above them.",
+                "recognition_correct_answer": "yes",
+                "scrambled_words": [
+                      "smelled",
+                      "fresh",
+                      "sharp",
+                      "and",
+                      "air"
+                ],
+                "correct_order": "air smelled fresh sharp and"
+          },
+          {
+                "id": "H012",
+                "topic": "A Wooden Boy",
+                "text_type": "Human-written",
+                "pair_id": "public_domain_pool",
+                "source_title": "The Adventures of Pinocchio",
+                "source_author": "Carlo Collodi",
+                "source_url": "https://www.gutenberg.org/ebooks/500",
+                "source_note": "Adapted from public-domain human-authored narrative prose.",
+                "passage": "Pinocchio ran down the road with his wooden feet tapping loudly. He forgot the warning and looked only at the town.",
+                "memory_sentence": "Pinocchio ran down the road with his wooden feet tapping loudly.",
+                "recognition_question": "Did this sentence appear in the passage?",
+                "recognition_sentence": "Pinocchio stayed beside the fire and read quietly.",
+                "recognition_correct_answer": "no",
+                "scrambled_words": [
+                      "road",
+                      "with",
+                      "his",
+                      "wooden",
+                      "the"
+                ],
+                "correct_order": "the road with his wooden"
+          },
+          {
+                "id": "H013",
+                "topic": "A Train Platform",
+                "text_type": "Human-written",
+                "pair_id": "public_domain_pool",
+                "source_title": "The Railway Children",
+                "source_author": "E. Nesbit",
+                "source_url": "https://www.gutenberg.org/ebooks/1874",
+                "source_note": "Adapted from public-domain human-authored narrative prose.",
+                "passage": "The children waited near the railway line and waved as the train rushed past. Smoke curled over the field behind them.",
+                "memory_sentence": "Smoke curled over the field behind them.",
+                "recognition_question": "Did this sentence appear in the passage?",
+                "recognition_correct_answer": "yes",
+                "recognition_sentence": "The children waited near the railway line and waved as the train rushed past.",
+                "scrambled_words": [
+                      "over",
+                      "the",
+                      "field",
+                      "behind",
+                      "curled"
+                ],
+                "correct_order": "curled over the field behind"
+          },
+          {
+                "id": "H014",
+                "topic": "A Wild Dog",
+                "text_type": "Human-written",
+                "pair_id": "public_domain_pool",
+                "source_title": "The Call of the Wild",
+                "source_author": "Jack London",
+                "source_url": "https://www.gutenberg.org/ebooks/215",
+                "source_note": "Adapted from public-domain human-authored narrative prose.",
+                "passage": "Buck heard the men calling and lifted his head from the snow. The forest was silent, and the trail went on.",
+                "memory_sentence": "The forest was silent, and the trail went on.",
+                "recognition_question": "Did this sentence appear in the passage?",
+                "recognition_sentence": "Buck heard the men calling and lifted his head from the snow.",
+                "recognition_correct_answer": "yes",
+                "scrambled_words": [
+                      "silent",
+                      "and",
+                      "the",
+                      "trail",
+                      "was"
+                ],
+                "correct_order": "was silent and the trail"
+          },
+          {
+                "id": "H015",
+                "topic": "A Sea Voyage",
+                "text_type": "Human-written",
+                "pair_id": "public_domain_pool",
+                "source_title": "The Swiss Family Robinson",
+                "source_author": "Johann David Wyss",
+                "source_url": "https://www.gutenberg.org/ebooks/3836",
+                "source_note": "Adapted from public-domain human-authored narrative prose.",
+                "passage": "The family climbed from the broken ship and looked toward the strange shore. Their boxes were wet, but everyone was alive.",
+                "memory_sentence": "The family climbed from the broken ship and looked toward the strange shore.",
+                "recognition_question": "Did this sentence appear in the passage?",
+                "recognition_sentence": "Their boxes were wet, but everyone was alive.",
+                "recognition_correct_answer": "yes",
+                "scrambled_words": [
+                      "broken",
+                      "ship",
+                      "and",
+                      "looked",
+                      "the"
+                ],
+                "correct_order": "the broken ship and looked"
+          },
+          {
+                "id": "H016",
+                "topic": "An Old House",
+                "text_type": "Human-written",
+                "pair_id": "public_domain_pool",
+                "source_title": "The Old Curiosity Shop",
+                "source_author": "Charles Dickens",
+                "source_url": "https://www.gutenberg.org/ebooks/700",
+                "source_note": "Adapted from public-domain human-authored narrative prose.",
+                "passage": "Nell crossed the dark shop and touched the dusty counter. The old house creaked softly, as if it were listening.",
+                "memory_sentence": "The old house creaked softly, as if it were listening.",
+                "recognition_question": "Did this sentence appear in the passage?",
+                "recognition_sentence": "Nell crossed the dark shop and touched the dusty counter.",
+                "recognition_correct_answer": "yes",
+                "scrambled_words": [
+                      "creaked",
+                      "softly",
+                      "as",
+                      "if",
+                      "house"
+                ],
+                "correct_order": "house creaked softly as if"
+          },
+          {
+                "id": "H017",
+                "topic": "A Village Visit",
+                "text_type": "Human-written",
+                "pair_id": "public_domain_pool",
+                "source_title": "Pride and Prejudice",
+                "source_author": "Jane Austen",
+                "source_url": "https://www.gutenberg.org/ebooks/1342",
+                "source_note": "Adapted from public-domain human-authored narrative prose.",
+                "passage": "Elizabeth walked quickly along the lane, holding her dress above the mud. The house appeared beyond the trees at last.",
+                "memory_sentence": "Elizabeth walked quickly along the lane, holding her dress above the mud.",
+                "recognition_question": "Did this sentence appear in the passage?",
+                "recognition_sentence": "Elizabeth rode slowly across a frozen lake.",
+                "recognition_correct_answer": "no",
+                "scrambled_words": [
+                      "the",
+                      "lane",
+                      "holding",
+                      "her",
+                      "along"
+                ],
+                "correct_order": "along the lane holding her"
+          },
+          {
+                "id": "H018",
+                "topic": "A Lion's Paw",
+                "text_type": "Human-written",
+                "pair_id": "public_domain_pool",
+                "source_title": "Aesop's Fables",
+                "source_author": "Aesop",
+                "source_url": "https://www.gutenberg.org/ebooks/11339",
+                "source_note": "Adapted from public-domain human-authored fable narrative.",
+                "passage": "The mouse ran over the sleeping lion and woke him. Later, it gnawed the ropes and set the great animal free.",
+                "memory_sentence": "The mouse ran over the sleeping lion and woke him.",
+                "recognition_question": "Did this sentence appear in the passage?",
+                "recognition_sentence": "Later, it gnawed the ropes and set the great animal free.",
+                "recognition_correct_answer": "yes",
+                "scrambled_words": [
+                      "over",
+                      "the",
+                      "sleeping",
+                      "lion",
+                      "ran"
+                ],
+                "correct_order": "ran over the sleeping lion"
+          },
+          {
+                "id": "H019",
+                "topic": "A Looking Glass",
+                "text_type": "Human-written",
+                "pair_id": "public_domain_pool",
+                "source_title": "Through the Looking-Glass",
+                "source_author": "Lewis Carroll",
+                "source_url": "https://www.gutenberg.org/ebooks/12",
+                "source_note": "Adapted from public-domain human-authored narrative prose.",
+                "passage": "Alice touched the glass and found that it was soft like mist. In a moment, she was standing in another room.",
+                "memory_sentence": "In a moment, she was standing in another room.",
+                "recognition_question": "Did this sentence appear in the passage?",
+                "recognition_sentence": "Alice touched the glass and found that it was soft like mist.",
+                "recognition_correct_answer": "yes",
+                "scrambled_words": [
+                      "she",
+                      "was",
+                      "standing",
+                      "in",
+                      "moment"
+                ],
+                "correct_order": "moment she was standing in"
+          },
+          {
+                "id": "H020",
+                "topic": "A Country Lane",
+                "text_type": "Human-written",
+                "pair_id": "public_domain_pool",
+                "source_title": "Emma",
+                "source_author": "Jane Austen",
+                "source_url": "https://www.gutenberg.org/ebooks/158",
+                "source_note": "Adapted from public-domain human-authored narrative prose.",
+                "passage": "Emma paused at the gate and watched the carriage turn into the lane. The afternoon was mild, and visitors were expected.",
+                "memory_sentence": "Emma paused at the gate and watched the carriage turn into the lane.",
+                "recognition_question": "Did this sentence appear in the passage?",
+                "recognition_sentence": "The afternoon was mild, and visitors were expected.",
+                "recognition_correct_answer": "yes",
+                "scrambled_words": [
+                      "and",
+                      "watched",
+                      "the",
+                      "carriage",
+                      "gate"
+                ],
+                "correct_order": "gate and watched the carriage"
+          }
     ];
 
     let EXPERIMENT_PASSAGE_POOL = HUMAN_PASSAGE_POOL;
 
     const CUE_ITEMS = [
-      ["fluency_rating", "This text is fluent."],
-      ["structure_rating", "This text has a clear and predictable structure."],
-      ["clarity_rating", "This text is clear and easy to understand."],
-      ["emotion_rating", "This text expresses emotion or personal feeling."],
-      ["personal_voice_rating", "This text has a clear personal voice."],
-      ["genericness_rating", "This text feels generic or template-like."],
-      ["naturalness_rating", "This text sounds natural."]
+      {
+        name: "fluency_rating",
+        label: "How fluent is this text?",
+        low: "1 = Not fluent / 完全不流利",
+        high: "5 = Very fluent / 非常流利"
+      },
+      {
+        name: "structure_rating",
+        label: "How clear and predictable is the structure?",
+        low: "1 = Unclear structure / 结构不清楚",
+        high: "5 = Very clear structure / 结构很清楚"
+      },
+      {
+        name: "clarity_rating",
+        label: "How easy is this text to understand?",
+        low: "1 = Hard to understand / 很难理解",
+        high: "5 = Easy to understand / 很容易理解"
+      },
+      {
+        name: "emotion_rating",
+        label: "How much emotion or personal feeling does this text express?",
+        low: "1 = No emotion / 几乎没有情感",
+        high: "5 = Strong emotion / 情感很明显"
+      },
+      {
+        name: "personal_voice_rating",
+        label: "How strong is the personal voice in this text?",
+        low: "1 = No personal voice / 没有个人声音",
+        high: "5 = Strong personal voice / 个人声音很明显"
+      },
+      {
+        name: "genericness_rating",
+        label: "How generic or template-like does this text feel?",
+        low: "1 = Not generic / 不模板化",
+        high: "5 = Very generic / 非常模板化"
+      },
+      {
+        name: "naturalness_rating",
+        label: "How natural does this text sound?",
+        low: "1 = Not natural / 很不自然",
+        high: "5 = Very natural / 非常自然"
+      }
     ];
 
     const STORAGE_KEY = "aiAuthorshipMemoryDemoDraft";
@@ -1222,13 +1396,24 @@
       });
     }
 
-    function makeLikert(name, container) {
-      container.innerHTML = [1, 2, 3, 4, 5].map(value => `
-        <label>
-          <input type="radio" name="${name}" value="${value}">
-          <strong>${value}</strong>
-        </label>
-      `).join("");
+    function makeLikert(name, container, anchors = {}) {
+      const low = anchors.low || "1 = Low / 低";
+      const high = anchors.high || "5 = High / 高";
+      container.className = "likert-scale";
+      container.innerHTML = `
+        <div class="likert-anchors" aria-hidden="true">
+          <span>${low}</span>
+          <span>${high}</span>
+        </div>
+        <div class="likert">
+          ${[1, 2, 3, 4, 5].map(value => `
+            <label title="${value === 1 ? low : value === 5 ? high : ""}">
+              <input type="radio" name="${name}" value="${value}">
+              <strong>${value}</strong>
+            </label>
+          `).join("")}
+        </div>
+      `;
     }
 
     function selectedValue(name) {
@@ -1473,7 +1658,10 @@
 
     function setupJudgment() {
       makeKeyOptions(AUTHORSHIP_KEYS, $("#authorshipOptions"));
-      makeLikert("aiLikelihood", $("#aiLikelihoodLikert"));
+      makeLikert("aiLikelihood", $("#aiLikelihoodLikert"), {
+        low: "1 = Definitely human-written / 明显人工撰写",
+        high: "5 = Definitely AI-generated / 明显 AI 生成"
+      });
       $("#judgmentError").textContent = "";
       state.activeStage = "authorship";
       state.stageStart = performance.now();
@@ -1498,13 +1686,13 @@
     }
 
     function setupRatings() {
-      $("#cueRatings").innerHTML = CUE_ITEMS.map(([name, label]) => `
+      $("#cueRatings").innerHTML = CUE_ITEMS.map(item => `
         <fieldset>
-          <legend>${label} *</legend>
-          <div class="likert" id="${name}"></div>
+          <legend>${item.label} *</legend>
+          <div id="${item.name}"></div>
         </fieldset>
       `).join("");
-      CUE_ITEMS.forEach(([name]) => makeLikert(name, $(`#${name}`)));
+      CUE_ITEMS.forEach(item => makeLikert(item.name, $(`#${item.name}`), item));
       $("#ratingError").textContent = "";
       showScreen(els.rating, "Trial");
     }
@@ -1696,13 +1884,13 @@
     });
 
     $("#ratingNextBtn").addEventListener("click", () => {
-      const missing = CUE_ITEMS.some(([name]) => !selectedValue(name));
+      const missing = CUE_ITEMS.some(item => !selectedValue(item.name));
       if (missing) {
         $("#ratingError").textContent = "Please rate every linguistic cue before continuing.";
         return;
       }
-      CUE_ITEMS.forEach(([name]) => {
-        state.currentData[name] = selectedValue(name);
+      CUE_ITEMS.forEach(item => {
+        state.currentData[item.name] = selectedValue(item.name);
       });
       saveDraft();
       setupDistractor();
